@@ -1,0 +1,275 @@
+/* ============================================
+   Estilos del panel de administracion
+   Reutiliza las variables definidas en styles.css
+   ============================================ */
+
+/* ---------- Login ---------- */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-madera-oscura), var(--color-madera));
+}
+
+.login-card {
+    background-color: var(--color-blanco);
+    padding: 2.5rem;
+    border-radius: var(--radio);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+}
+
+.login-card h1 {
+    color: var(--color-madera-oscura);
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+}
+
+.subtitulo {
+    color: var(--color-madera);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.login-card input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--color-madera-clara);
+    border-radius: var(--radio);
+    font-size: 1rem;
+}
+
+.login-card button {
+    width: 100%;
+    padding: 0.9rem;
+    background-color: var(--color-acento);
+    color: var(--color-blanco);
+    border: none;
+    border-radius: var(--radio);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.login-card button:hover {
+    background-color: #8a4d2c;
+}
+
+.error {
+    color: #c0392b;
+    margin-top: 0.8rem;
+    font-size: 0.9rem;
+}
+
+/* ---------- Panel admin general ---------- */
+.admin-nombre {
+    color: var(--color-beige);
+    margin-right: 1rem;
+    font-size: 0.95rem;
+}
+
+.btn-logout {
+    background-color: transparent;
+    color: var(--color-blanco);
+    border: 1px solid var(--color-madera-clara);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radio);
+    cursor: pointer;
+}
+
+.btn-logout:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.admin-tabs {
+    max-width: 1200px;
+    margin: 1.5rem auto 0;
+    padding: 0 2rem;
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 2px solid var(--color-beige);
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--color-madera);
+    border-bottom: 3px solid transparent;
+    transition: all 0.15s ease;
+}
+
+.tab-btn.activo {
+    color: var(--color-madera-oscura);
+    border-bottom-color: var(--color-acento);
+    font-weight: 600;
+}
+
+.admin-tab {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem 3rem;
+}
+
+.admin-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.btn-primario {
+    background-color: var(--color-madera);
+    color: var(--color-blanco);
+    border: none;
+    padding: 0.7rem 1.4rem;
+    border-radius: var(--radio);
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background-color 0.15s ease;
+}
+
+.btn-primario:hover {
+    background-color: var(--color-madera-oscura);
+}
+
+/* ---------- Tabla de productos ---------- */
+.tabla-productos {
+    background-color: var(--color-blanco);
+    border-radius: var(--radio);
+    overflow: hidden;
+    box-shadow: var(--sombra);
+}
+
+.fila-producto {
+    display: grid;
+    grid-template-columns: 70px 1.5fr 1fr 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-beige);
+}
+
+.fila-producto:last-child {
+    border-bottom: none;
+}
+
+.fila-producto img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.fila-producto .acciones {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.fila-producto .acciones button {
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.btn-editar {
+    background-color: var(--color-beige);
+    color: var(--color-madera-oscura);
+}
+
+.btn-borrar {
+    background-color: #f5d6d0;
+    color: #c0392b;
+}
+
+/* ---------- Formulario de producto ---------- */
+#form-producto label {
+    display: block;
+    margin: 0.8rem 0 0.3rem;
+    font-size: 0.9rem;
+    color: var(--color-madera-oscura);
+    font-weight: 600;
+    text-align: left;
+}
+
+#form-producto input,
+#form-producto textarea {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid var(--color-madera-clara);
+    border-radius: var(--radio);
+    font-size: 0.95rem;
+    font-family: inherit;
+}
+
+#form-producto button {
+    width: 100%;
+    margin-top: 1.2rem;
+    padding: 0.9rem;
+    border: none;
+    border-radius: var(--radio);
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* ---------- Estadisticas de mas vistos ---------- */
+.lista-stats {
+    background-color: var(--color-blanco);
+    border-radius: var(--radio);
+    overflow: hidden;
+    box-shadow: var(--sombra);
+}
+
+.fila-stat {
+    display: grid;
+    grid-template-columns: 40px 60px 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-beige);
+}
+
+.fila-stat:last-child {
+    border-bottom: none;
+}
+
+.fila-stat img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.fila-stat .posicion {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--color-madera-clara);
+    text-align: center;
+}
+
+.fila-stat .total-vistas {
+    background-color: var(--color-beige);
+    color: var(--color-madera-oscura);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 700px) {
+    .fila-producto {
+        grid-template-columns: 50px 1fr;
+    }
+    .fila-producto .acciones {
+        grid-column: 1 / -1;
+    }
+}
