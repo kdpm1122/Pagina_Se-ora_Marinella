@@ -1,0 +1,353 @@
+/* ============================================
+   MueblesCatalog - Estilos generales
+   Paleta: tonos madera, beige y cafe, estilo elegante
+   ============================================ */
+
+:root {
+    --color-fondo: #faf6f1;
+    --color-madera-oscura: #4a3728;
+    --color-madera: #8b5e3c;
+    --color-madera-clara: #c8a888;
+    --color-beige: #f0e4d3;
+    --color-blanco: #ffffff;
+    --color-texto: #2b2118;
+    --color-acento: #a3623b;
+    --color-whatsapp: #25d366;
+    --sombra: 0 4px 12px rgba(74, 55, 40, 0.12);
+    --radio: 12px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    line-height: 1.5;
+}
+
+/* ---------- Header ---------- */
+.header {
+    background-color: var(--color-madera-oscura);
+    color: var(--color-blanco);
+    padding: 1.2rem 2rem;
+    box-shadow: var(--sombra);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.btn-carrito {
+    background-color: var(--color-acento);
+    color: var(--color-blanco);
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radio);
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.btn-carrito:hover {
+    background-color: #8a4d2c;
+    transform: translateY(-2px);
+}
+
+.contador {
+    background-color: var(--color-blanco);
+    color: var(--color-acento);
+    border-radius: 50%;
+    padding: 0.1rem 0.5rem;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+/* ---------- Filtros ---------- */
+.filtros {
+    max-width: 1200px;
+    margin: 1.5rem auto;
+    padding: 0 2rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.filtros input,
+.filtros select {
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--color-madera-clara);
+    border-radius: var(--radio);
+    font-size: 1rem;
+    background-color: var(--color-blanco);
+}
+
+.filtros input {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* ---------- Catalogo (grid de productos) ---------- */
+.catalogo {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.tarjeta-producto {
+    background-color: var(--color-blanco);
+    border-radius: var(--radio);
+    overflow: hidden;
+    box-shadow: var(--sombra);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tarjeta-producto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(74, 55, 40, 0.2);
+}
+
+.tarjeta-producto img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background-color: var(--color-beige);
+}
+
+.tarjeta-producto-info {
+    padding: 1rem;
+}
+
+.tarjeta-producto-info h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+    color: var(--color-madera-oscura);
+}
+
+.tarjeta-producto-info .categoria {
+    display: inline-block;
+    background-color: var(--color-beige);
+    color: var(--color-madera);
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    margin-bottom: 0.5rem;
+}
+
+.tarjeta-producto-info .precio {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--color-acento);
+    margin-top: 0.5rem;
+}
+
+.btn-agregar {
+    width: 100%;
+    background-color: var(--color-madera);
+    color: var(--color-blanco);
+    border: none;
+    padding: 0.7rem;
+    margin-top: 0.8rem;
+    border-radius: var(--radio);
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background-color 0.15s ease;
+}
+
+.btn-agregar:hover {
+    background-color: var(--color-madera-oscura);
+}
+
+/* ---------- Modal de detalle ---------- */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--color-blanco);
+    border-radius: var(--radio);
+    max-width: 600px;
+    width: 90%;
+    max-height: 85vh;
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+.modal-contenido {
+    padding: 2rem;
+    position: relative;
+}
+
+.cerrar-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--color-madera-oscura);
+}
+
+/* ---------- Panel lateral del carrito ---------- */
+.panel-carrito {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 380px;
+    max-width: 90%;
+    height: 100vh;
+    background-color: var(--color-blanco);
+    box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+}
+
+.panel-carrito-header {
+    padding: 1.5rem;
+    background-color: var(--color-madera-oscura);
+    color: var(--color-blanco);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel-carrito-header .cerrar-modal {
+    color: var(--color-blanco);
+    position: static;
+}
+
+.items-carrito {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 1.5rem;
+}
+
+.item-carrito {
+    display: flex;
+    gap: 0.8rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--color-beige);
+    align-items: center;
+}
+
+.item-carrito img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.item-carrito-info {
+    flex: 1;
+}
+
+.item-carrito-info h4 {
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+}
+
+.item-carrito-controles {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+}
+
+.item-carrito-controles button {
+    width: 26px;
+    height: 26px;
+    border: 1px solid var(--color-madera-clara);
+    background-color: var(--color-blanco);
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-eliminar-item {
+    color: #c0392b;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.panel-carrito-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--color-beige);
+}
+
+.total-carrito {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: var(--color-madera-oscura);
+}
+
+.btn-whatsapp {
+    width: 100%;
+    background-color: var(--color-whatsapp);
+    color: var(--color-blanco);
+    border: none;
+    padding: 0.9rem;
+    border-radius: var(--radio);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.btn-whatsapp:hover {
+    background-color: #1ea952;
+}
+
+/* ---------- Overlay (fondo oscuro al abrir modal/carrito) ---------- */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 90;
+}
+
+/* ---------- Utilidad ---------- */
+.oculto {
+    display: none !important;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 600px) {
+    .header-content {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    .panel-carrito {
+        width: 100%;
+    }
+}

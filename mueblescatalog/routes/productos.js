@@ -1,0 +1,145 @@
+// ============================================
+// Rutas de productos (el catalogo de muebles)
+// GET    /api/productos            -> publico, lista productos activos
+// GET    /api/productos/:id        -> publico, detalle de un producto
+// POST   /api/productos            -> solo admin, crear producto
+// PUT    /api/productos/:id        -> solo admin, editar producto
+// DELETE /api/productos/:id        -> solo admin, borrar producto (soft delete)
+// POST   /api/productos/:id/vista  -> publico, registra una vista
+// GET    /api/productos/stats/mas-vistos -> solo admin, top de vistos
+// ============================================
+const express = require('express');
+const pool = require('../db/pool');
+const verificarToken = require('../middleware/auth');
+
+const router = express.Router();
+
+// Listar productos activos (catalogo publico)
+router.get('/', async (req, res) => {
+    try {
+        const resultado = await pool.query(
+            `SELECT id, nombre, descripcion, precio, categoria, imagen_url, creado_en
+             FROM productos
+             WHERE activo = TRUE
+             ORDER BY creado_en DESC`
+        );
+        res.json(resultado.rows);
+    } catch (err) {
+        console.error('Error listando productos:', err.message);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+});
+
+// IMPORTANTE: esta ruta de estadisticas va ANTES de "/:id"
+// para que Express no confunda "mas-vistos" con un id
+router.get('/stats/mas-vistos', verificarToken, async (req, res) => {
+    try {
+        const resultado = await pool.query(
+            `SELECT p.id, p.nombre, p.imagen_url, p.precio, COUNT(v.id) AS total_vistas
+             FROM productos p
+             LEFT JOIN vistas_producto v ON v.producto_id = p.id
+             GROUP BY p.id
+             ORDER BY total_vistas DESC
+             LIMIT 10`
+        );
+        res.json(resultado.rows);
+    } catch (err) {
+        console.error('Error obteniendo estadisticas:', err.message);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+});
+
+// Detalle de un producto especifico
+router.get('/:id', async (req, res) => {
+    try {
+        const resultado = await pool.query(
+            'SELECT * FROM productos WHERE id = $1 AND activo = TRUE',
+            [req.params.id]
+        );
+        if (resultado.rows.length === 0) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+        res.json(resultado.rows[0]);
+    } catch (err) {
+        console.error('Error obteniendo producto:', err.message);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+});
+
+// Registrar una vista de producto (se llama cuando el cliente abre el detalle)
+router.post('/:id/vista', async (req, res) => {
+    try {
+        await pool.query(
+            'INSERT INTO vistas_producto (producto_id) VALUES ($1)',
+            [req.params.id]
+        );
+        res.status(201).json({ ok: true });
+    } catch (err) {
+        console.error('Error registrando vista:', err.message);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+});
+
+// Crear producto (solo admin)
+router.post('/', verificarToken, async (req, res) => {
+    const { nombre, descripcion, precio, categoria, imagen_url } = req.body;
+
+    if (!nombre || !precio) {
+        return res.status(400).json({ error: 'Nombre y precio son requeridos' });
+    }
+
+    try {
+        const resultado = await pool.query(
+            `INSERT INTO productos (nombre, descripcion, precio, categoria, imagen_url, creado_por)
+             VALUES ($1, $2, $3, $4, $5, $6)
+             RETURNING *`,
+            [nombre, descripcion, precio, categoria, imagen_url, req.usuario.id]
+        );
+        res.status(201).json(resultado.rows[0]);
+    } catch (err) {
+        console.error('Error creando producto:', err.message);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+});
+
+// Editar producto (solo admin)
+router.put('/:id', verificarToken, async (req, res) => {
+    const { nombre, descripcion, precio, categoria, imagen_url } = req.body;
+
+    try {
+        const resultado = await pool.query(
+            `UPDATE productos
+             SET nombre = $1, descripcion = $2, precio = $3, categoria = $4,
+                 imagen_url = $5, actualizado_en = NOW()
+             WHERE id = $6
+             RETURNING *`,
+            [nombre, descripcion, precio, categoria, imagen_url, req.params.id]
+        );
+        if (resultado.rows.length === 0) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+        res.json(resultado.rows[0]);
+    } catch (err) {
+        console.error('Error editando producto:', err.message);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+});
+
+// Borrar producto (soft delete: lo marca inactivo en vez de eliminarlo de la BD)
+router.delete('/:id', verificarToken, async (req, res) => {
+    try {
+        const resultado = await pool.query(
+            'UPDATE productos SET activo = FALSE WHERE id = $1 RETURNING id',
+            [req.params.id]
+        );
+        if (resultado.rows.length === 0) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+        res.json({ ok: true, id: resultado.rows[0].id });
+    } catch (err) {
+        console.error('Error borrando producto:', err.message);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+});
+
+module.exports = router;
