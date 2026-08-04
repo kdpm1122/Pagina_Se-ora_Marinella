@@ -72,18 +72,74 @@ async function abrirDetalleProducto(id) {
     if (!producto) return;
 
     const detalle = document.getElementById('detalle-producto');
+
+    const fotos = [producto.imagen_url, producto.imagen_url_2].filter(Boolean);
+    const tieneVariasFotos = fotos.length > 1;
+
     detalle.innerHTML = `
-        <img src="${producto.imagen_url || '/img/sin-imagen.png'}" alt="${producto.nombre}"
-             style="width:100%; max-height:300px; object-fit:cover; border-radius:8px;">
+        <div class="carrusel-detalle" data-indice="0">
+            <img id="carrusel-img" src="${fotos[0] || '/img/sin-imagen.png'}" alt="${producto.nombre}"
+                 style="width:100%; height:300px; object-fit:contain; border-radius:8px; background-color:#f0e4d3;">
+            ${tieneVariasFotos ? `
+                <button class="carrusel-flecha carrusel-flecha-izq" id="carrusel-anterior">&#8249;</button>
+                <button class="carrusel-flecha carrusel-flecha-der" id="carrusel-siguiente">&#8250;</button>
+                <div class="carrusel-puntos">
+                    ${fotos.map((_, i) => `<span class="carrusel-punto ${i === 0 ? 'activo' : ''}" data-indice="${i}"></span>`).join('')}
+                </div>
+            ` : ''}
+        </div>
         <h2 style="margin-top:1rem;">${producto.nombre}</h2>
         ${producto.categoria ? `<span class="categoria">${producto.categoria}</span>` : ''}
         <p style="margin:1rem 0;">${producto.descripcion || 'Sin descripción disponible.'}</p>
+        ${(producto.ancho_cm || producto.largo_cm || producto.alto_cm) ? `
+        <p style="color:#8b5e3c; font-size:0.9rem; margin-bottom:0.5rem;">
+            Medidas: ${producto.ancho_cm || '-'} cm (ancho) x ${producto.largo_cm || '-'} cm (largo) x ${producto.alto_cm || '-'} cm (alto)
+        </p>` : ''}
         <p class="precio" style="font-size:1.5rem;">${formatearPrecio(producto.precio)}</p>
         <button class="btn-agregar" data-id="${producto.id}">Agregar al carrito</button>
     `;
 
     document.getElementById('modal-producto').classList.remove('oculto');
     document.getElementById('overlay').classList.remove('oculto');
+
+    // Calculamos el color de fondo que combine con la foto actual
+    const imgCarrusel = document.getElementById('carrusel-img');
+    imgCarrusel.style.backgroundColor = '#f0e4d3'; // beige mientras se calcula
+    obtenerColorDominante(imgCarrusel).then(color => {
+        imgCarrusel.style.backgroundColor = color;
+    });
+
+    // Logica del carrusel: cambiar de foto con las flechas o los puntos
+    if (tieneVariasFotos) {
+        const carruselDiv = document.querySelector('.carrusel-detalle');
+        const imgEl = document.getElementById('carrusel-img');
+
+        function mostrarFoto(indice) {
+            const indiceCircular = ((indice % fotos.length) + fotos.length) % fotos.length;
+            imgEl.src = fotos[indiceCircular];
+            carruselDiv.dataset.indice = indiceCircular;
+
+            obtenerColorDominante(imgEl).then(color => {
+                imgEl.style.backgroundColor = color;
+            });
+
+            document.querySelectorAll('.carrusel-punto').forEach((punto, i) => {
+                punto.classList.toggle('activo', i === indiceCircular);
+            });
+        }
+
+        document.getElementById('carrusel-anterior').addEventListener('click', () => {
+            mostrarFoto(parseInt(carruselDiv.dataset.indice) - 1);
+        });
+
+        document.getElementById('carrusel-siguiente').addEventListener('click', () => {
+            mostrarFoto(parseInt(carruselDiv.dataset.indice) + 1);
+        });
+
+        document.querySelectorAll('.carrusel-punto').forEach(punto => {
+            punto.addEventListener('click', () => mostrarFoto(parseInt(punto.dataset.indice)));
+        });
+    }
 
     // Registrar la vista en segundo plano (no bloqueamos la interfaz por esto)
     fetch(`${API_URL}/${id}/vista`, { method: 'POST' }).catch(err => {

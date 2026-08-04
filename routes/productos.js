@@ -18,7 +18,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
     try {
         const resultado = await pool.query(
-            `SELECT id, nombre, descripcion, precio, categoria, imagen_url, creado_en
+            `SELECT id, nombre, descripcion, precio, categoria, imagen_url, imagen_url_2, ancho_cm, largo_cm, alto_cm, creado_en
              FROM productos
              WHERE activo = TRUE
              ORDER BY creado_en DESC`
@@ -82,7 +82,7 @@ router.post('/:id/vista', async (req, res) => {
 
 // Crear producto (solo admin)
 router.post('/', verificarToken, async (req, res) => {
-    const { nombre, descripcion, precio, categoria, imagen_url } = req.body;
+    const { nombre, descripcion, precio, categoria, imagen_url, imagen_url_2, ancho_cm, largo_cm, alto_cm } = req.body;
 
     if (!nombre || !precio) {
         return res.status(400).json({ error: 'Nombre y precio son requeridos' });
@@ -90,10 +90,10 @@ router.post('/', verificarToken, async (req, res) => {
 
     try {
         const resultado = await pool.query(
-            `INSERT INTO productos (nombre, descripcion, precio, categoria, imagen_url, creado_por)
-             VALUES ($1, $2, $3, $4, $5, $6)
+            `INSERT INTO productos (nombre, descripcion, precio, categoria, imagen_url, imagen_url_2, ancho_cm, largo_cm, alto_cm, creado_por)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
              RETURNING *`,
-            [nombre, descripcion, precio, categoria, imagen_url, req.usuario.id]
+            [nombre, descripcion, precio, categoria, imagen_url, imagen_url_2, ancho_cm, largo_cm, alto_cm, req.usuario.id]
         );
         res.status(201).json(resultado.rows[0]);
     } catch (err) {
@@ -104,16 +104,16 @@ router.post('/', verificarToken, async (req, res) => {
 
 // Editar producto (solo admin)
 router.put('/:id', verificarToken, async (req, res) => {
-    const { nombre, descripcion, precio, categoria, imagen_url } = req.body;
+    const { nombre, descripcion, precio, categoria, imagen_url, imagen_url_2, ancho_cm, largo_cm, alto_cm } = req.body;
 
     try {
         const resultado = await pool.query(
             `UPDATE productos
              SET nombre = $1, descripcion = $2, precio = $3, categoria = $4,
-                 imagen_url = $5, actualizado_en = NOW()
-             WHERE id = $6
+                 imagen_url = $5, imagen_url_2 = $6, ancho_cm = $7, largo_cm = $8, alto_cm = $9, actualizado_en = NOW()
+             WHERE id = $10
              RETURNING *`,
-            [nombre, descripcion, precio, categoria, imagen_url, req.params.id]
+            [nombre, descripcion, precio, categoria, imagen_url, imagen_url_2, ancho_cm, largo_cm, alto_cm, req.params.id]
         );
         if (resultado.rows.length === 0) {
             return res.status(404).json({ error: 'Producto no encontrado' });

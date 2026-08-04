@@ -42,4 +42,10 @@ CREATE INDEX IF NOT EXISTS idx_vistas_producto_id ON vistas_producto(producto_id
 CREATE INDEX IF NOT EXISTS idx_productos_activo ON productos(activo);
 CREATE INDEX IF NOT EXISTS idx_productos_categoria ON productos(categoria);
 
-<!-- prueba -->
+-- Segunda foto opcional por producto (agregada en paso 31)
+ALTER TABLE productos ADD COLUMN IF NOT EXISTS imagen_url_2 TEXT;
+
+-- Medidas del mueble en centimetros (agregado en paso 35)
+ALTER TABLE productos ADD COLUMN IF NOT EXISTS ancho_cm NUMERIC(6,1);
+ALTER TABLE productos ADD COLUMN IF NOT EXISTS largo_cm NUMERIC(6,1);
+ALTER TABLE productos ADD COLUMN IF NOT EXISTS alto_cm NUMERIC(6,1);
