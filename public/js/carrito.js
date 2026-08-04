@@ -34,6 +34,10 @@ function agregarAlCarrito(idProducto) {
             nombre: producto.nombre,
             precio: producto.precio,
             imagen_url: producto.imagen_url,
+            descripcion: producto.descripcion || '',
+            ancho_cm: producto.ancho_cm || null,
+            largo_cm: producto.largo_cm || null,
+            alto_cm: producto.alto_cm || null,
             cantidad: 1
         });
     }
@@ -82,12 +86,16 @@ function pintarCarrito() {
         return;
     }
 
-    contenedor.innerHTML = carrito.map(item => `
+    contenedor.innerHTML = carrito.map(item => {
+        const tieneMedidas = item.ancho_cm || item.largo_cm || item.alto_cm;
+        return `
         <div class="item-carrito" data-id="${item.id}">
             <img src="${item.imagen_url || '/img/sin-imagen.png'}" alt="${item.nombre}">
             <div class="item-carrito-info">
                 <h4>${item.nombre}</h4>
-                <p>${formatearPrecio(item.precio)}</p>
+                ${item.descripcion ? `<p class="item-carrito-descripcion">${item.descripcion}</p>` : ''}
+                ${tieneMedidas ? `<p class="item-carrito-medidas">${item.ancho_cm || '-'} x ${item.largo_cm || '-'} x ${item.alto_cm || '-'} cm</p>` : ''}
+                <p class="item-carrito-precio">${formatearPrecio(item.precio)}</p>
                 <div class="item-carrito-controles">
                     <button class="btn-restar" data-id="${item.id}">-</button>
                     <span>${item.cantidad}</span>
@@ -96,7 +104,8 @@ function pintarCarrito() {
             </div>
             <button class="btn-eliminar-item" data-id="${item.id}">&times;</button>
         </div>
-    `).join('');
+    `;
+    }).join('');
 
     const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
     document.getElementById('total-carrito').textContent = formatearPrecio(total);
