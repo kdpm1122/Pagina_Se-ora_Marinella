@@ -5,57 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Muebles Marinella - Catálogo</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/inicio.css">
 </head>
 <body>
 
     <header class="header">
         <div class="header-content">
             <h1 class="logo">Muebles Marinella</h1>
-            <button id="btn-carrito" class="btn-carrito">
-                🛒 Carrito <span id="contador-carrito" class="contador">0</span>
-            </button>
         </div>
     </header>
 
-    <section class="filtros">
-        <input type="text" id="buscador" placeholder="Buscar mueble...">
-        <select id="filtro-categoria">
-            <option value="">Todas las categorías</option>
-        </select>
+    <section class="hero-inicio">
+        <h2>Encuentra el mueble perfecto para cada espacio</h2>
+        <p>Explora nuestro catálogo por categoría</p>
     </section>
 
-    <main class="catalogo" id="catalogo">
-        <!-- Los productos se cargan aqui dinamicamente con JS -->
-        <p id="mensaje-carga">Cargando muebles...</p>
+    <main class="grid-categorias">
+        <a href="/categoria.html?categoria=Dormitorios" class="tarjeta-categoria tarjeta-dormitorios">
+            <div class="tarjeta-categoria-overlay">
+                <h3>Dormitorios</h3>
+                <span>Ver muebles →</span>
+            </div>
+        </a>
+
+        <a href="/categoria.html?categoria=Comedores" class="tarjeta-categoria tarjeta-comedores">
+            <div class="tarjeta-categoria-overlay">
+                <h3>Comedores</h3>
+                <span>Ver muebles →</span>
+            </div>
+        </a>
+
+        <a href="/categoria.html?categoria=Salas" class="tarjeta-categoria tarjeta-salas">
+            <div class="tarjeta-categoria-overlay">
+                <h3>Salas</h3>
+                <span>Ver muebles →</span>
+            </div>
+        </a>
+
+        <a href="/categoria.html" class="tarjeta-categoria tarjeta-todas">
+            <div class="tarjeta-categoria-overlay">
+                <h3>Todas las categorías</h3>
+                <span>Ver catálogo completo →</span>
+            </div>
+        </a>
     </main>
 
-    <!-- Modal de detalle de producto -->
-    <div id="modal-producto" class="modal oculto">
-        <div class="modal-contenido">
-            <span class="cerrar-modal" id="cerrar-modal-producto">&times;</span>
-            <div id="detalle-producto"></div>
-        </div>
-    </div>
+    <footer class="footer-inicio">
+        <p>Muebles Marinella © 2026</p>
+    </footer>
 
-    <!-- Panel lateral del carrito -->
-    <div id="panel-carrito" class="panel-carrito oculto">
-        <div class="panel-carrito-header">
-            <h2>Tu carrito</h2>
-            <span class="cerrar-modal" id="cerrar-carrito">&times;</span>
-        </div>
-        <div id="items-carrito" class="items-carrito"></div>
-        <div class="panel-carrito-footer">
-            <p class="total-carrito">Total: <span id="total-carrito">$0</span></p>
-            <button id="btn-whatsapp" class="btn-whatsapp">
-                Confirmar pedido por WhatsApp
-            </button>
-        </div>
-    </div>
-
-    <div id="overlay" class="overlay oculto"></div>
-
-    <script src="/js/color-fondo.js"></script>
-    <script src="/js/carrito.js"></script>
-    <script src="/js/catalogo.js"></script>
 </body>
 </html>

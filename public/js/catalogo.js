@@ -161,7 +161,18 @@ async function cargarProductos() {
 
         productosCache = await respuesta.json();
         llenarFiltroCategorias(productosCache);
-        pintarProductos(productosCache);
+
+        // Leemos el parametro ?categoria= de la URL (viene del index.html)
+        // para preseleccionar el filtro al llegar desde una tarjeta de categoria
+        const parametros = new URLSearchParams(window.location.search);
+        const categoriaInicial = parametros.get('categoria');
+
+        if (categoriaInicial) {
+            document.getElementById('filtro-categoria').value = categoriaInicial;
+            aplicarFiltros();
+        } else {
+            pintarProductos(productosCache);
+        }
     } catch (err) {
         document.getElementById('catalogo').innerHTML =
             '<p id="mensaje-carga">No se pudieron cargar los muebles. Intenta recargar la página.</p>';

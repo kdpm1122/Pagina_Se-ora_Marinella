@@ -1,0 +1,105 @@
+/* ============================================
+   Estilos de la portada (index.html)
+   4 tarjetas grandes de categoria, estilo "one page"
+   ============================================ */
+
+.hero-inicio {
+    text-align: center;
+    padding: 2.5rem 1.5rem 1.5rem;
+    background-color: var(--color-fondo);
+}
+
+.hero-inicio h2 {
+    font-size: 1.8rem;
+    color: var(--color-madera-oscura);
+    margin-bottom: 0.5rem;
+}
+
+.hero-inicio p {
+    color: var(--color-madera);
+    font-size: 1rem;
+}
+
+.grid-categorias {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1rem 2rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.tarjeta-categoria {
+    position: relative;
+    height: 260px;
+    border-radius: var(--radio);
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    box-shadow: var(--sombra);
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tarjeta-categoria:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(74, 55, 40, 0.25);
+}
+
+.tarjeta-dormitorios {
+    background-image: linear-gradient(rgba(74,55,40,0.15), rgba(74,55,40,0.55)),
+        url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800');
+}
+
+.tarjeta-comedores {
+    background-image: linear-gradient(rgba(74,55,40,0.15), rgba(74,55,40,0.55)),
+        url('https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=800');
+}
+
+.tarjeta-salas {
+    background-image: linear-gradient(rgba(74,55,40,0.15), rgba(74,55,40,0.55)),
+        url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800');
+}
+
+.tarjeta-todas {
+    background-image: linear-gradient(rgba(163,98,59,0.5), rgba(74,55,40,0.75)),
+        url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800');
+}
+
+.tarjeta-categoria-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem;
+    color: white;
+}
+
+.tarjeta-categoria-overlay h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+.tarjeta-categoria-overlay span {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.footer-inicio {
+    text-align: center;
+    padding: 1.5rem;
+    color: var(--color-madera);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--color-beige);
+}
+
+@media (max-width: 700px) {
+    .grid-categorias {
+        grid-template-columns: 1fr;
+    }
+    .tarjeta-categoria {
+        height: 200px;
+    }
+}
