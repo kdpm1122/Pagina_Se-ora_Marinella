@@ -27,7 +27,7 @@ function pintarProductos(productos) {
 
     contenedor.innerHTML = productos.map(p => `
         <div class="tarjeta-producto" data-id="${p.id}">
-            <img src="${p.imagen_url || '/img/sin-imagen.png'}" alt="${p.nombre}">
+            <img src="${p.imagen_url || '/img/sin-imagen.png'}" alt="${p.nombre}" data-imagen-color="1">
             <div class="tarjeta-producto-info">
                 ${p.categoria ? `<span class="categoria">${p.categoria}</span>` : ''}
                 <h3>${p.nombre}</h3>
@@ -36,6 +36,14 @@ function pintarProductos(productos) {
             </div>
         </div>
     `).join('');
+
+    // Aplicamos el color de fondo dinamico a cada imagen recien pintada
+    document.querySelectorAll('img[data-imagen-color]').forEach(img => {
+        img.style.backgroundColor = '#f0e4d3';
+        obtenerColorDominante(img).then(color => {
+            img.style.backgroundColor = color;
+        });
+    });
 }
 
 // --- Llenar el select de categorias con las categorias unicas que existan ---
