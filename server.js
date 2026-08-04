@@ -7,6 +7,7 @@ const cors = require('cors');
 
 const authRoutes = require('./routes/auth');
 const productosRoutes = require('./routes/productos');
+const uploadRoutes = require('./routes/upload');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +22,7 @@ app.use(express.static('public'));
 // Rutas de la API
 app.use('/api/auth', authRoutes);
 app.use('/api/productos', productosRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Ruta de salud, util para verificar que el server esta vivo
 app.get('/api/health', (req, res) => {

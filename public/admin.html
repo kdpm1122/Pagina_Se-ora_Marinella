@@ -15,7 +15,7 @@
             <h1>Muebles Marinella</h1>
             <p class="subtitulo">Panel de administración</p>
             <form id="form-login">
-                <input type="email" id="login-email" placeholder="Correo electrónico" required>
+                <input type="text" id="login-email" placeholder="Correo electrónico" required>
                 <input type="password" id="login-password" placeholder="Contraseña" required>
                 <button type="submit">Iniciar sesión</button>
                 <p id="login-error" class="error oculto"></p>
@@ -79,8 +79,13 @@
                 <label>Categoría</label>
                 <input type="text" id="producto-categoria" placeholder="Ej: Salas, Comedores, Dormitorios">
 
-                <label>URL de la imagen</label>
-                <input type="url" id="producto-imagen" placeholder="https://...">
+                <label>Foto del mueble</label>
+                <input type="file" id="producto-imagen-archivo" accept="image/jpeg,image/png,image/webp">
+                <input type="hidden" id="producto-imagen">
+                <div id="preview-imagen" class="preview-imagen oculto">
+                    <img id="preview-imagen-img" src="" alt="Vista previa">
+                    <span id="preview-imagen-estado"></span>
+                </div>
 
                 <button type="submit" class="btn-primario">Guardar producto</button>
                 <p id="form-producto-error" class="error oculto"></p>
