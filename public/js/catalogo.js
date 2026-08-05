@@ -31,7 +31,7 @@ function pintarProductos(productos) {
 
     contenedor.innerHTML = productos.map(p => `
         <div class="tarjeta-producto" data-id="${p.id}">
-            <img src="${p.imagen_url || '/img/sin-imagen.png'}" alt="${p.nombre}" data-imagen-color="1" loading="lazy">
+            <img src="${p.imagen_url || '/img/sin-imagen.png'}" alt="${p.nombre}${p.categoria ? ' - ' + p.categoria : ''} - Muebles Marinella" data-imagen-color="1" loading="lazy">
             <div class="tarjeta-producto-info">
                 ${p.categoria ? `<span class="categoria">${p.categoria}</span>` : ''}
                 <h3>${p.nombre}</h3>
@@ -64,16 +64,58 @@ function llenarFiltroCategorias(productos) {
 }
 
 // --- Aplicar filtros de busqueda + categoria sobre el cache local ---
+function configurarSliderPrecio(productos) {
+    if (productos.length === 0) return;
+    const precios = productos.map(p => parseFloat(p.precio));
+    const min = Math.floor(Math.min(...precios) / 50000) * 50000;
+    const max = Math.ceil(Math.max(...precios) / 50000) * 50000;
+
+    const sliderMin = document.getElementById('precio-min');
+    const sliderMax = document.getElementById('precio-max');
+
+    [sliderMin, sliderMax].forEach(s => {
+        s.min = min;
+        s.max = max;
+        s.step = 50000;
+    });
+    sliderMin.value = min;
+    sliderMax.value = max;
+
+    actualizarTextoRangoPrecio();
+}
+
+function actualizarTextoRangoPrecio() {
+    const min = parseFloat(document.getElementById('precio-min').value);
+    const max = parseFloat(document.getElementById('precio-max').value);
+    document.getElementById('rango-precio-texto').textContent = `${formatearPrecio(min)} - ${formatearPrecio(max)}`;
+}
+
 function aplicarFiltros() {
     const texto = document.getElementById('buscador').value.toLowerCase().trim();
     const categoria = document.getElementById('filtro-categoria').value;
+    const orden = document.getElementById('orden-productos').value;
 
-    const filtrados = productosCache.filter(p => {
+    let precioMin = parseFloat(document.getElementById('precio-min').value);
+    let precioMax = parseFloat(document.getElementById('precio-max').value);
+    if (precioMin > precioMax) [precioMin, precioMax] = [precioMax, precioMin];
+
+    actualizarTextoRangoPrecio();
+
+    let filtrados = productosCache.filter(p => {
         const coincideTexto = p.nombre.toLowerCase().includes(texto) ||
                                (p.descripcion || '').toLowerCase().includes(texto);
         const coincideCategoria = !categoria || p.categoria === categoria;
-        return coincideTexto && coincideCategoria;
+        const coincidePrecio = parseFloat(p.precio) >= precioMin && parseFloat(p.precio) <= precioMax;
+        return coincideTexto && coincideCategoria && coincidePrecio;
     });
+
+    if (orden === 'precio-asc') {
+        filtrados = filtrados.slice().sort((a, b) => a.precio - b.precio);
+    } else if (orden === 'precio-desc') {
+        filtrados = filtrados.slice().sort((a, b) => b.precio - a.precio);
+    } else if (orden === 'nombre-asc') {
+        filtrados = filtrados.slice().sort((a, b) => a.nombre.localeCompare(b.nombre));
+    }
 
     pintarProductos(filtrados);
 }
@@ -173,6 +215,7 @@ async function cargarProductos() {
 
         productosCache = await respuesta.json();
         llenarFiltroCategorias(productosCache);
+        configurarSliderPrecio(productosCache);
 
         // Leemos el parametro ?categoria= de la URL (viene del index.html)
         // para preseleccionar el filtro al llegar desde una tarjeta de categoria
@@ -183,6 +226,9 @@ async function cargarProductos() {
         if (categoriaInicial) {
             document.getElementById('filtro-categoria').value = categoriaInicial;
             breadcrumbActual.textContent = ` / ${categoriaInicial}`;
+            document.title = `${categoriaInicial} - Muebles Marinella`;
+            const metaDesc = document.querySelector('meta[property="og:description"]');
+            if (metaDesc) metaDesc.setAttribute('content', `Explora nuestra colección de ${categoriaInicial.toLowerCase()}. Calidad y diseño para tu hogar.`);
             aplicarFiltros();
         } else {
             breadcrumbActual.textContent = ' / Todas las categorías';
@@ -201,6 +247,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('buscador').addEventListener('input', aplicarFiltros);
     document.getElementById('filtro-categoria').addEventListener('change', aplicarFiltros);
+    document.getElementById('orden-productos').addEventListener('change', aplicarFiltros);
+    document.getElementById('precio-min').addEventListener('input', aplicarFiltros);
+    document.getElementById('precio-max').addEventListener('input', aplicarFiltros);
 
     document.getElementById('overlay').addEventListener('click', cerrarModales);
     document.getElementById('cerrar-modal-producto').addEventListener('click', cerrarModales);

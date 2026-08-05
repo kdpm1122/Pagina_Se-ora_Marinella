@@ -32,7 +32,21 @@
         <select id="filtro-categoria">
             <option value="">Todas las categorías</option>
         </select>
+        <select id="orden-productos">
+            <option value="">Ordenar por</option>
+            <option value="precio-asc">Precio: menor a mayor</option>
+            <option value="precio-desc">Precio: mayor a menor</option>
+            <option value="nombre-asc">Nombre: A-Z</option>
+        </select>
     </section>
+
+    <div class="filtro-precio">
+        <label>Rango de precio: <span id="rango-precio-texto"></span></label>
+        <div class="sliders-precio">
+            <input type="range" id="precio-min" min="0" max="5000000" step="50000" value="0">
+            <input type="range" id="precio-max" min="0" max="5000000" step="50000" value="5000000">
+        </div>
+    </div>
 
     <p id="contador-resultados" class="contador-resultados"></p>
 

@@ -646,3 +646,50 @@ body {
 .tarjeta-producto {
     animation: aparecer 0.4s ease forwards;
 }
+
+/* ---------- Filtro de rango de precio (slider doble) ---------- */
+.filtro-precio {
+    max-width: 1200px;
+    margin: 0 auto 1rem;
+    padding: 0 2rem;
+}
+
+.filtro-precio label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-madera-oscura);
+    margin-bottom: 0.5rem;
+}
+
+.sliders-precio {
+    position: relative;
+    height: 30px;
+}
+
+.sliders-precio input[type="range"] {
+    position: absolute;
+    width: 100%;
+    top: 10px;
+    -webkit-appearance: none;
+    background: transparent;
+    pointer-events: none;
+}
+
+.sliders-precio input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    pointer-events: auto;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--color-mostaza);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+.sliders-precio input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    background-color: var(--color-beige);
+    border-radius: 2px;
+}
