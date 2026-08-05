@@ -19,6 +19,10 @@ function formatearPrecio(valor) {
 // --- Pintar las tarjetas de producto en el catalogo ---
 function pintarProductos(productos) {
     const contenedor = document.getElementById('catalogo');
+    const contadorEl = document.getElementById('contador-resultados');
+    if (contadorEl) {
+        contadorEl.textContent = `Mostrando ${productos.length} de ${productosCache.length} productos`;
+    }
 
     if (productos.length === 0) {
         contenedor.innerHTML = '<p id="mensaje-carga">No se encontraron muebles con ese criterio.</p>';
@@ -175,10 +179,13 @@ async function cargarProductos() {
         const parametros = new URLSearchParams(window.location.search);
         const categoriaInicial = parametros.get('categoria');
 
+        const breadcrumbActual = document.getElementById('breadcrumb-actual');
         if (categoriaInicial) {
             document.getElementById('filtro-categoria').value = categoriaInicial;
+            breadcrumbActual.textContent = ` / ${categoriaInicial}`;
             aplicarFiltros();
         } else {
+            breadcrumbActual.textContent = ' / Todas las categorías';
             pintarProductos(productosCache);
         }
     } catch (err) {

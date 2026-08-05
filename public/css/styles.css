@@ -455,3 +455,67 @@ body {
     color: var(--color-madera-oscura);
     margin: 0.2rem 0;
 }
+
+/* ---------- Boton flotante de WhatsApp (siempre visible) ---------- */
+.whatsapp-flotante {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 58px;
+    height: 58px;
+    background-color: var(--color-whatsapp);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    z-index: 150;
+    transition: transform 0.15s ease;
+}
+
+.whatsapp-flotante:hover {
+    transform: scale(1.08);
+}
+
+@media (max-width: 600px) {
+    .whatsapp-flotante {
+        bottom: 16px;
+        right: 16px;
+        width: 52px;
+        height: 52px;
+    }
+}
+
+/* ---------- Breadcrumb y contador de resultados ---------- */
+.breadcrumb {
+    max-width: 1200px;
+    margin: 1rem auto 0;
+    padding: 0 2rem;
+    font-size: 0.85rem;
+    color: var(--color-madera);
+}
+
+.breadcrumb a {
+    color: var(--color-madera);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.breadcrumb a:hover {
+    color: var(--color-madera-oscura);
+    text-decoration: underline;
+}
+
+#breadcrumb-actual {
+    color: var(--color-madera-oscura);
+    font-weight: 600;
+}
+
+.contador-resultados {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    font-size: 0.85rem;
+    color: var(--color-madera);
+    margin-bottom: 0.8rem;
+}

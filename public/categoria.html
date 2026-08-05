@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Muebles Marinella - Catálogo</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
@@ -17,12 +18,19 @@
         </div>
     </header>
 
+    <nav class="breadcrumb">
+        <a href="/">Inicio</a>
+        <span id="breadcrumb-actual"></span>
+    </nav>
+
     <section class="filtros">
         <input type="text" id="buscador" placeholder="Buscar mueble...">
         <select id="filtro-categoria">
             <option value="">Todas las categorías</option>
         </select>
     </section>
+
+    <p id="contador-resultados" class="contador-resultados"></p>
 
     <main class="catalogo" id="catalogo">
         <!-- Los productos se cargan aqui dinamicamente con JS -->
@@ -47,12 +55,20 @@
         <div class="panel-carrito-footer">
             <p class="total-carrito">Total: <span id="total-carrito">$0</span></p>
             <button id="btn-whatsapp" class="btn-whatsapp">
-                Confirmar pedido por WhatsApp
+                Cotización completa por WhatsApp
             </button>
         </div>
     </div>
 
     <div id="overlay" class="overlay oculto"></div>
+
+    <!-- Boton flotante de WhatsApp, siempre visible para consultas rapidas -->
+    <a id="whatsapp-flotante" class="whatsapp-flotante" target="_blank" rel="noopener" title="Escríbenos por WhatsApp">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="white">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.149-.15.35-.35.5-.5.15-.15.198-.297.05-.594-.15-.297-.66-1.6-.906-2.13-.148-.298-.297-.257-.42-.257-.126 0-.297.023-.446.023s-.396.05-.6.257c-.203.198-.795.775-.795 1.874 0 1.098.795 2.174 1.06 2.397.264.223 2.043 3.115 5.014 4.145 3.028 1.052 3.028.702 3.579.65.554-.052 1.758-.72 2.006-1.415.248-.694.248-1.288.174-1.415-.074-.124-.297-.198-.594-.347Z"/>
+            <path d="M12.004 2C6.487 2 2 6.487 2 12.004c0 1.898.518 3.68 1.42 5.207L2 22l4.892-1.396a9.955 9.955 0 0 0 5.112 1.396c5.517 0 10.004-4.487 10.004-10.004S17.521 2 12.004 2Zm0 18.007a8.003 8.003 0 0 1-4.28-1.24l-.307-.19-3.048.87.82-2.99-.201-.31a7.998 7.998 0 0 1-1.234-4.243c0-4.42 3.596-8.017 8.014-8.017 4.418 0 8.014 3.596 8.014 8.017-.004 4.417-3.6 8.113-8.02 8.113Z"/>
+        </svg>
+    </a>
 
     <script src="/js/color-fondo.js"></script>
     <script src="/js/carrito.js"></script>

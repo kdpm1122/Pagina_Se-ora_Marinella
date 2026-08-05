@@ -5,8 +5,9 @@
    ============================================ */
 
 :root {
-    --color-mostaza: #1e8449;
-    --color-mostaza-oscuro: #166638;
+    --color-mostaza: #d68c1f;
+    --color-mostaza-oscuro: #b8730f;
+    --color-verde-hover: #1e8449;
 }
 
 .hero-inicio {
@@ -102,6 +103,12 @@
     padding: 0.35rem 0.9rem;
     border-radius: 2px;
     margin-top: 0.3rem;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.tarjeta-categoria:hover .tarjeta-categoria-overlay span {
+    background-color: var(--color-verde-hover);
+    color: #ffffff;
 }
 
 .footer-inicio {

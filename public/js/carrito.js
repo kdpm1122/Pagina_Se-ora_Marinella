@@ -162,6 +162,13 @@ function mostrarNotificacion(texto) {
 document.addEventListener('DOMContentLoaded', () => {
     actualizarContadorCarrito();
 
+    // Configurar el boton flotante de WhatsApp (si existe en esta pagina)
+    const botonFlotante = document.getElementById('whatsapp-flotante');
+    if (botonFlotante) {
+        const mensajeBienvenida = encodeURIComponent('Hola, estoy interesado en sus muebles. ¿Me pueden dar más información?');
+        botonFlotante.href = `https://wa.me/${NUMERO_WHATSAPP}?text=${mensajeBienvenida}`;
+    }
+
     document.getElementById('btn-carrito').addEventListener('click', () => {
         pintarCarrito();
         document.getElementById('panel-carrito').classList.remove('oculto');
