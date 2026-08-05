@@ -113,10 +113,17 @@ body {
 .catalogo {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 2rem 3rem;
+    padding: 0 2rem 5rem;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1.5rem;
+}
+
+@media (max-width: 600px) {
+    .catalogo {
+        grid-template-columns: 1fr;
+        padding-bottom: 6rem;
+    }
 }
 
 .tarjeta-producto {
@@ -479,10 +486,14 @@ body {
 
 @media (max-width: 600px) {
     .whatsapp-flotante {
-        bottom: 16px;
-        right: 16px;
-        width: 52px;
-        height: 52px;
+        bottom: 14px;
+        right: 14px;
+        width: 46px;
+        height: 46px;
+    }
+    .whatsapp-flotante svg {
+        width: 22px;
+        height: 22px;
     }
 }
 
@@ -692,4 +703,92 @@ body {
     height: 4px;
     background-color: var(--color-beige);
     border-radius: 2px;
+}
+
+/* ---------- Productos relacionados en el detalle ---------- */
+.relacionados {
+    margin: 1.5rem -2rem -2rem;
+    padding: 1.3rem 2rem;
+    background-color: var(--color-fondo);
+    border-top: 1px solid var(--color-beige);
+}
+
+.relacionados h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--color-madera);
+    margin-bottom: 0.9rem;
+}
+
+.relacionados-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+}
+
+.relacionado-item {
+    cursor: pointer;
+    background-color: var(--color-blanco);
+    border: 1px solid var(--color-beige);
+    border-radius: var(--radio);
+    padding: 0.6rem;
+    text-align: center;
+    transition: border-color 0.15s ease;
+}
+
+.relacionado-item:hover {
+    border-color: var(--color-mostaza);
+}
+
+.relacionado-item img {
+    width: 100%;
+    height: 65px;
+    object-fit: contain;
+    background-color: var(--color-beige);
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.relacionado-item p {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-madera-oscura);
+    line-height: 1.3;
+    margin-bottom: 0.3rem;
+    min-height: 2.4em;
+}
+
+.relacionado-item span {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-madera-oscura);
+}
+
+/* ---------- Etiqueta destacada (Nuevo / Mas vendido) ---------- */
+.tarjeta-producto-imagen-wrap {
+    position: relative;
+}
+
+.badge-etiqueta {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 0.3rem 0.7rem;
+    border-radius: 2px;
+    z-index: 5;
+    color: white;
+}
+
+.badge-nuevo {
+    background-color: #1e8449;
+}
+
+.badge-mas_vendido {
+    background-color: #d68c1f;
 }

@@ -176,6 +176,7 @@ async function abrirFormularioProducto(idProducto = null) {
         document.getElementById('producto-ancho').value = producto.ancho_cm || '';
         document.getElementById('producto-largo').value = producto.largo_cm || '';
         document.getElementById('producto-alto').value = producto.alto_cm || '';
+        document.getElementById('producto-etiqueta').value = producto.etiqueta || '';
     } else {
         document.getElementById('titulo-form-producto').textContent = 'Nuevo producto';
     }
@@ -338,7 +339,8 @@ document.addEventListener('DOMContentLoaded', () => {
             imagen_url_2: imagenUrl2,
             ancho_cm: document.getElementById('producto-ancho').value ? parseFloat(document.getElementById('producto-ancho').value) : null,
             largo_cm: document.getElementById('producto-largo').value ? parseFloat(document.getElementById('producto-largo').value) : null,
-            alto_cm: document.getElementById('producto-alto').value ? parseFloat(document.getElementById('producto-alto').value) : null
+            alto_cm: document.getElementById('producto-alto').value ? parseFloat(document.getElementById('producto-alto').value) : null,
+            etiqueta: document.getElementById('producto-etiqueta').value || null
         };
         guardarProducto(datos, idProducto || null);
     });

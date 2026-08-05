@@ -29,9 +29,14 @@ function pintarProductos(productos) {
         return;
     }
 
+    const textoEtiqueta = { nuevo: 'Nuevo', mas_vendido: 'Más vendido' };
+
     contenedor.innerHTML = productos.map(p => `
         <div class="tarjeta-producto" data-id="${p.id}">
-            <img src="${p.imagen_url || '/img/sin-imagen.png'}" alt="${p.nombre}${p.categoria ? ' - ' + p.categoria : ''} - Muebles Marinella" data-imagen-color="1" loading="lazy">
+            <div class="tarjeta-producto-imagen-wrap">
+                ${p.etiqueta && textoEtiqueta[p.etiqueta] ? `<span class="badge-etiqueta badge-${p.etiqueta}">${textoEtiqueta[p.etiqueta]}</span>` : ''}
+                <img src="${p.imagen_url || '/img/sin-imagen.png'}" alt="${p.nombre}${p.categoria ? ' - ' + p.categoria : ''} - Muebles Marinella" data-imagen-color="1" loading="lazy">
+            </div>
             <div class="tarjeta-producto-info">
                 ${p.categoria ? `<span class="categoria">${p.categoria}</span>` : ''}
                 <h3>${p.nombre}</h3>
@@ -151,6 +156,7 @@ async function abrirDetalleProducto(id) {
         </p>` : ''}
         <p class="precio" style="font-size:1.5rem;">${formatearPrecio(producto.precio)}</p>
         <button class="btn-agregar" data-id="${producto.id}">Agregar al carrito</button>
+        ${generarHtmlRelacionados(producto)}
     `;
 
     document.getElementById('modal-producto').classList.remove('oculto');
@@ -199,6 +205,29 @@ async function abrirDetalleProducto(id) {
     fetch(`${API_URL}/${id}/vista`, { method: 'POST' }).catch(err => {
         console.warn('No se pudo registrar la vista:', err.message);
     });
+}
+
+function generarHtmlRelacionados(producto) {
+    const relacionados = productosCache
+        .filter(p => p.id !== producto.id && p.categoria === producto.categoria)
+        .slice(0, 3);
+
+    if (relacionados.length === 0) return '';
+
+    return `
+        <div class="relacionados">
+            <h4>También te puede interesar</h4>
+            <div class="relacionados-grid">
+                ${relacionados.map(p => `
+                    <div class="relacionado-item" data-id="${p.id}">
+                        <img src="${p.imagen_url || '/img/sin-imagen.png'}" alt="${p.nombre}">
+                        <p>${p.nombre}</p>
+                        <span>${formatearPrecio(p.precio)}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
 }
 
 function cerrarModales() {
@@ -268,9 +297,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // El boton "agregar" dentro del modal de detalle
+    // El boton "agregar" dentro del modal de detalle, y los productos relacionados
     document.getElementById('detalle-producto').addEventListener('click', (e) => {
         const btnAgregar = e.target.closest('.btn-agregar');
-        if (btnAgregar) agregarAlCarrito(btnAgregar.dataset.id);
+        const relacionado = e.target.closest('.relacionado-item');
+
+        if (btnAgregar) {
+            agregarAlCarrito(btnAgregar.dataset.id);
+        } else if (relacionado) {
+            abrirDetalleProducto(relacionado.dataset.id);
+        }
     });
 });

@@ -49,3 +49,6 @@ ALTER TABLE productos ADD COLUMN IF NOT EXISTS imagen_url_2 TEXT;
 ALTER TABLE productos ADD COLUMN IF NOT EXISTS ancho_cm NUMERIC(6,1);
 ALTER TABLE productos ADD COLUMN IF NOT EXISTS largo_cm NUMERIC(6,1);
 ALTER TABLE productos ADD COLUMN IF NOT EXISTS alto_cm NUMERIC(6,1);
+
+-- Etiqueta destacada opcional: 'nuevo', 'mas_vendido', o vacio (agregado en paso 101)
+ALTER TABLE productos ADD COLUMN IF NOT EXISTS etiqueta VARCHAR(20);
