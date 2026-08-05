@@ -84,8 +84,17 @@ router.post('/:id/vista', async (req, res) => {
 router.post('/', verificarToken, async (req, res) => {
     const { nombre, descripcion, precio, categoria, imagen_url, imagen_url_2, ancho_cm, largo_cm, alto_cm, etiqueta } = req.body;
 
-    if (!nombre || !precio) {
-        return res.status(400).json({ error: 'Nombre y precio son requeridos' });
+    if (!nombre || !nombre.trim()) {
+        return res.status(400).json({ error: 'El nombre del producto es requerido' });
+    }
+    if (nombre.trim().length > 150) {
+        return res.status(400).json({ error: 'El nombre no puede superar 150 caracteres' });
+    }
+    if (!precio || isNaN(precio) || parseFloat(precio) <= 0) {
+        return res.status(400).json({ error: 'El precio debe ser un numero mayor a cero' });
+    }
+    if (descripcion && descripcion.length > 2000) {
+        return res.status(400).json({ error: 'La descripcion no puede superar 2000 caracteres' });
     }
 
     try {

@@ -5,11 +5,22 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const rateLimit = require('express-rate-limit');
 const pool = require('../db/pool');
 
 const router = express.Router();
 
-router.post('/login', async (req, res) => {
+// Limite: maximo 5 intentos de login cada 15 minutos por IP
+// Protege contra ataques de fuerza bruta a la contraseña del admin
+const limitadorLogin = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    message: { error: 'Demasiados intentos de inicio de sesion. Intenta de nuevo en 15 minutos.' },
+    standardHeaders: true,
+    legacyHeaders: false
+});
+
+router.post('/login', limitadorLogin, async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {

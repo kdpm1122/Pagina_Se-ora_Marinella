@@ -4,6 +4,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 
 const authRoutes = require('./routes/auth');
 const productosRoutes = require('./routes/productos');
@@ -13,6 +14,20 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middlewares globales
+// crossOriginResourcePolicy en false porque servimos imagenes de Cloudinary/Unsplash
+// desde dominios externos, y helmet por defecto podria bloquear esos recursos
+app.use(helmet({
+    crossOriginResourcePolicy: false,
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            imgSrc: ["'self'", "data:", "https:"],
+            scriptSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            connectSrc: ["'self'"]
+        }
+    }
+}));
 app.use(cors());
 app.use(express.json());
 
