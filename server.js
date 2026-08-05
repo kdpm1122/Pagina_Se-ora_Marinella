@@ -29,6 +29,11 @@ app.get('/api/health', (req, res) => {
     res.json({ ok: true, mensaje: 'MueblesCatalog API funcionando' });
 });
 
+// Si ninguna ruta coincidio (ni API ni archivo estatico), servimos el 404 personalizado
+app.use((req, res) => {
+    res.status(404).sendFile(__dirname + '/public/404.html');
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

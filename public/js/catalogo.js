@@ -31,7 +31,7 @@ function pintarProductos(productos) {
 
     contenedor.innerHTML = productos.map(p => `
         <div class="tarjeta-producto" data-id="${p.id}">
-            <img src="${p.imagen_url || '/img/sin-imagen.png'}" alt="${p.nombre}" data-imagen-color="1">
+            <img src="${p.imagen_url || '/img/sin-imagen.png'}" alt="${p.nombre}" data-imagen-color="1" loading="lazy">
             <div class="tarjeta-producto-info">
                 ${p.categoria ? `<span class="categoria">${p.categoria}</span>` : ''}
                 <h3>${p.nombre}</h3>

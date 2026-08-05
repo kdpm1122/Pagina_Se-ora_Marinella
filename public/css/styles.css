@@ -602,3 +602,47 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* ---------- Pagina 404 ---------- */
+.pagina-404 {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.pagina-404 h2 {
+    font-size: 5rem;
+    font-weight: 800;
+    color: var(--color-madera-clara);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.pagina-404 h3 {
+    font-size: 1.5rem;
+    color: var(--color-madera-oscura);
+    margin-bottom: 0.8rem;
+}
+
+.pagina-404 p {
+    color: var(--color-madera);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+/* ---------- Animacion fade-in al aparecer las tarjetas ---------- */
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tarjeta-producto {
+    animation: aparecer 0.4s ease forwards;
+}
