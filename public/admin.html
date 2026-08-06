@@ -26,15 +26,42 @@
 
     <!-- Vista del panel (oculta hasta hacer login) -->
     <div id="vista-panel" class="oculto">
-        <header class="header">
+        <header class="header admin-header">
             <div class="header-content">
                 <h1 class="logo">Panel Admin - Muebles Marinella</h1>
-                <div>
+                <div class="header-actions">
                     <span id="admin-nombre" class="admin-nombre"></span>
                     <button id="btn-logout" class="btn-logout">Cerrar sesión</button>
                 </div>
             </div>
         </header>
+
+        <section class="admin-dashboard">
+            <div class="dashboard-header">
+                <div>
+                    <p class="dashboard-overline">Resumen del panel</p>
+                    <h2 class="dashboard-title">Control rápido de productos y vistas</h2>
+                </div>
+            </div>
+            <div class="dashboard-cards">
+                <article class="dashboard-card">
+                    <span class="dashboard-card-label">Productos activos</span>
+                    <p id="card-total-productos" class="dashboard-card-value">0</p>
+                </article>
+                <article class="dashboard-card">
+                    <span class="dashboard-card-label">Vistas totales</span>
+                    <p id="card-total-vistas" class="dashboard-card-value">0</p>
+                </article>
+                <article class="dashboard-card">
+                    <span class="dashboard-card-label">Top producto</span>
+                    <p id="card-top-producto" class="dashboard-card-value">Sin datos</p>
+                </article>
+                <article class="dashboard-card">
+                    <span class="dashboard-card-label">Sin imagen</span>
+                    <p id="card-sin-imagen" class="dashboard-card-value">0</p>
+                </article>
+            </div>
+        </section>
 
         <nav class="admin-tabs">
             <button class="tab-btn activo" data-tab="productos">Productos</button>

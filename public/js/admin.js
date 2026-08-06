@@ -50,6 +50,23 @@ function mostrarVistaPanel() {
     cargarProductosAdmin();
 }
 
+async function cargarDashboardMetrics() {
+    const productos = productosAdminCache.length ? productosAdminCache : [];
+    document.getElementById('card-total-productos').textContent = productos.length;
+    document.getElementById('card-sin-imagen').textContent = productos.filter(p => !p.imagen_url).length;
+
+    try {
+        const respuesta = await peticionAutenticada('/api/productos/stats/mas-vistos');
+        const stats = await respuesta.json();
+        const totalVistas = stats.reduce((sum, item) => sum + Number(item.total_vistas || 0), 0);
+        document.getElementById('card-total-vistas').textContent = totalVistas;
+        document.getElementById('card-top-producto').textContent = stats.length ? stats[0].nombre : 'Sin datos';
+    } catch (err) {
+        document.getElementById('card-total-vistas').textContent = '0';
+        document.getElementById('card-top-producto').textContent = 'Sin datos';
+    }
+}
+
 // --- Peticion generica autenticada, maneja el caso de token vencido ---
 async function peticionAutenticada(url, opciones = {}) {
     const token = obtenerToken();
@@ -156,6 +173,8 @@ async function cargarProductosAdmin() {
         const respuesta = await fetch('/api/productos');
         productosAdminCache = await respuesta.json();
         pintarTablaProductos(productosAdminCache);
+        actualizarDashboardMetrics();
+        await cargarDashboardMetrics();
     } catch (err) {
         contenedor.innerHTML = '<p style="padding:1.5rem;">Error cargando productos.</p>';
         console.error(err);
@@ -166,6 +185,12 @@ function filtrarProductosAdmin() {
     const texto = document.getElementById('admin-buscador').value.toLowerCase().trim();
     const filtrados = productosAdminCache.filter(p => p.nombre.toLowerCase().includes(texto));
     pintarTablaProductos(filtrados);
+}
+
+function actualizarDashboardMetrics() {
+    const productos = productosAdminCache.length ? productosAdminCache : [];
+    document.getElementById('card-total-productos').textContent = productos.length;
+    document.getElementById('card-sin-imagen').textContent = productos.filter(p => !p.imagen_url).length;
 }
 
 // --- Abrir el modal de formulario, vacio (nuevo) o lleno (editar) ---

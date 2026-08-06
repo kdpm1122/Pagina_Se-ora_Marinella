@@ -279,17 +279,19 @@ body {
     transform: translate(-50%, -50%);
     background-color: var(--color-blanco);
     border-radius: var(--radio);
-    max-width: 600px;
-    width: 90%;
-    max-height: 85vh;
-    overflow-y: auto;
-    z-index: 100;
+    max-width: 650px;
+    width: 92%;
+    max-height: 90vh;
+    overflow: hidden;
+    z-index: 180;
     box-shadow: 0 10px 40px rgba(0,0,0,0.3);
 }
 
 .modal-contenido {
-    padding: 2rem;
+    padding: 1.5rem 1.5rem 2rem;
     position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .cerrar-modal {
@@ -321,7 +323,7 @@ body {
     height: 100vh;
     background-color: var(--color-blanco);
     box-shadow: -4px 0 20px rgba(0,0,0,0.15);
-    z-index: 100;
+    z-index: 180;
     display: flex;
     flex-direction: column;
     transition: transform 0.3s ease;
@@ -559,6 +561,18 @@ body {
 /* ---------- Carrusel de fotos en el detalle del producto ---------- */
 .carrusel-detalle {
     position: relative;
+    min-height: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.carrusel-detalle img {
+    width: 100%;
+    max-height: 420px;
+    object-fit: contain;
+    display: block;
 }
 
 .carrusel-flecha {

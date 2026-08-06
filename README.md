@@ -37,9 +37,9 @@
 - `public/` - frontend estático
   - `index.html` - página de inicio
   - `categoria.html` - catálogo de productos
-  - `admin.html` - panel de administración
-  - `css/` - estilos fuente
-  - `js/` - scripts fuente de frontend
+- `admin.html` - panel de administración con login, gestión de productos y métricas.
+- `css/` - estilos fuente, incluyendo `admin.css` para el panel de administración.
+- `js/` - scripts fuente de frontend, incluyendo `admin.js` para el panel admin.
   - `dist/` - assets minificados generados para producción
 
 ## Instalación y configuración
