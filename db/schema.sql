@@ -59,3 +59,7 @@ CREATE TABLE IF NOT EXISTS homepage_config (
     clave VARCHAR(100) UNIQUE NOT NULL,
     valor TEXT
 );
+
+-- Color y material del mueble, texto libre (agregado en paso 130)
+ALTER TABLE productos ADD COLUMN IF NOT EXISTS color VARCHAR(50);
+ALTER TABLE productos ADD COLUMN IF NOT EXISTS material VARCHAR(50);

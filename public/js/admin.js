@@ -259,6 +259,8 @@ async function abrirFormularioProducto(idProducto = null) {
         document.getElementById('producto-largo').value = producto.largo_cm || '';
         document.getElementById('producto-alto').value = producto.alto_cm || '';
         document.getElementById('producto-etiqueta').value = producto.etiqueta || '';
+        document.getElementById('producto-color').value = producto.color || '';
+        document.getElementById('producto-material').value = producto.material || '';
     } else {
         document.getElementById('titulo-form-producto').textContent = 'Nuevo producto';
     }
@@ -459,7 +461,9 @@ document.addEventListener('DOMContentLoaded', () => {
             ancho_cm: document.getElementById('producto-ancho').value ? parseFloat(document.getElementById('producto-ancho').value) : null,
             largo_cm: document.getElementById('producto-largo').value ? parseFloat(document.getElementById('producto-largo').value) : null,
             alto_cm: document.getElementById('producto-alto').value ? parseFloat(document.getElementById('producto-alto').value) : null,
-            etiqueta: document.getElementById('producto-etiqueta').value || null
+            etiqueta: document.getElementById('producto-etiqueta').value || null,
+            color: document.getElementById('producto-color').value || null,
+            material: document.getElementById('producto-material').value || null
         };
         guardarProducto(datos, idProducto || null);
     });
