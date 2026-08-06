@@ -52,3 +52,10 @@ ALTER TABLE productos ADD COLUMN IF NOT EXISTS alto_cm NUMERIC(6,1);
 
 -- Etiqueta destacada opcional: 'nuevo', 'mas_vendido', o vacio (agregado en paso 101)
 ALTER TABLE productos ADD COLUMN IF NOT EXISTS etiqueta VARCHAR(20);
+
+-- Configuracion editable de la portada de inicio
+CREATE TABLE IF NOT EXISTS homepage_config (
+    id SERIAL PRIMARY KEY,
+    clave VARCHAR(100) UNIQUE NOT NULL,
+    valor TEXT
+);

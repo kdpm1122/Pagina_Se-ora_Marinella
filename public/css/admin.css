@@ -293,6 +293,66 @@
     background-color: var(--color-madera-oscura);
 }
 
+#form-homepage label {
+    display: block;
+    margin: 1rem 0 0.4rem;
+    font-size: 0.95rem;
+    color: var(--color-madera-oscura);
+    font-weight: 600;
+}
+
+#form-homepage input[type="file"] {
+    display: block;
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--color-madera-clara);
+    border-radius: var(--radio);
+    background-color: #fff;
+}
+
+.homepage-preview {
+    margin-top: 0.6rem;
+    min-height: 120px;
+    background-color: var(--color-fondo);
+    border: 1px solid var(--color-madera-clara);
+    border-radius: var(--radio);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-madera);
+    font-size: 0.9rem;
+    padding: 0.75rem;
+}
+
+.homepage-preview-img {
+    max-width: 100%;
+    max-height: 110px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+#form-homepage button {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.95rem;
+    border: none;
+    border-radius: var(--radio);
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: var(--color-madera);
+    color: var(--color-blanco);
+}
+
+#form-homepage button:hover {
+    background-color: var(--color-madera-oscura);
+}
+
+.success {
+    color: #167000;
+    margin-top: 0.8rem;
+    font-size: 0.95rem;
+}
+
 .preview-imagen {
     margin-top: 0.8rem;
     display: flex;

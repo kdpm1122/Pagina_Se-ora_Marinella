@@ -9,6 +9,7 @@ const helmet = require('helmet');
 const authRoutes = require('./routes/auth');
 const productosRoutes = require('./routes/productos');
 const uploadRoutes = require('./routes/upload');
+const homepageRoutes = require('./routes/homepage');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -40,6 +41,7 @@ app.use(express.static('public', { maxAge: oneDay }));
 app.use('/api/auth', authRoutes);
 app.use('/api/productos', productosRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/homepage', homepageRoutes);
 
 // Ruta de salud, util para verificar que el server esta vivo
 app.get('/api/health', (req, res) => {

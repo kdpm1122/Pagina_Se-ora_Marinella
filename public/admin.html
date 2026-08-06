@@ -66,6 +66,7 @@
         <nav class="admin-tabs">
             <button class="tab-btn activo" data-tab="productos">Productos</button>
             <button class="tab-btn" data-tab="stats">Más vistos</button>
+            <button class="tab-btn" data-tab="homepage">Portada</button>
         </nav>
 
         <!-- Tab: productos -->
@@ -86,6 +87,37 @@
             <div id="lista-stats" class="lista-stats">
                 <p>Cargando estadísticas...</p>
             </div>
+        </section>
+
+        <!-- Tab: portada -->
+        <section id="tab-homepage" class="admin-tab oculto">
+            <h2>Configuración de portada</h2>
+            <p>Actualiza los enlaces de las tarjetas de la página de inicio.</p>
+            <form id="form-homepage">
+                <label>Imagen Dormitorios</label>
+                <input type="file" id="homepage-img-rooms" accept="image/jpeg,image/png,image/webp">
+                <input type="hidden" id="homepage-img-rooms-url">
+                <div class="homepage-preview" id="preview-homepage-img-rooms">No hay imagen cargada</div>
+
+                <label>Imagen Comedores</label>
+                <input type="file" id="homepage-img-dining" accept="image/jpeg,image/png,image/webp">
+                <input type="hidden" id="homepage-img-dining-url">
+                <div class="homepage-preview" id="preview-homepage-img-dining">No hay imagen cargada</div>
+
+                <label>Imagen Salas</label>
+                <input type="file" id="homepage-img-living" accept="image/jpeg,image/png,image/webp">
+                <input type="hidden" id="homepage-img-living-url">
+                <div class="homepage-preview" id="preview-homepage-img-living">No hay imagen cargada</div>
+
+                <label>Imagen Todas las categorías</label>
+                <input type="file" id="homepage-img-all" accept="image/jpeg,image/png,image/webp">
+                <input type="hidden" id="homepage-img-all-url">
+                <div class="homepage-preview" id="preview-homepage-img-all">No hay imagen cargada</div>
+
+                <button type="submit" class="btn-primario">Guardar portada</button>
+                <p id="form-homepage-error" class="error oculto"></p>
+                <p id="form-homepage-success" class="success oculto"></p>
+            </form>
         </section>
     </div>
 

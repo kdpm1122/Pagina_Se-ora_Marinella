@@ -48,6 +48,7 @@ function mostrarVistaPanel() {
     document.getElementById('vista-panel').classList.remove('oculto');
     document.getElementById('admin-nombre').textContent = usuario ? usuario.nombre : '';
     cargarProductosAdmin();
+    cargarHomepageConfig();
 }
 
 async function cargarDashboardMetrics() {
@@ -181,6 +182,49 @@ async function cargarProductosAdmin() {
     }
 }
 
+async function cargarHomepageConfig() {
+    try {
+        const respuesta = await fetch('/api/homepage');
+        const config = await respuesta.json();
+
+        document.getElementById('homepage-img-rooms-url').value = config.hero_rooms || '';
+        document.getElementById('homepage-img-dining-url').value = config.hero_dining || '';
+        document.getElementById('homepage-img-living-url').value = config.hero_living || '';
+        document.getElementById('homepage-img-all-url').value = config.hero_all || '';
+
+        actualizarPreviewPortada('homepage-img-rooms', config.hero_rooms);
+        actualizarPreviewPortada('homepage-img-dining', config.hero_dining);
+        actualizarPreviewPortada('homepage-img-living', config.hero_living);
+        actualizarPreviewPortada('homepage-img-all', config.hero_all);
+    } catch (err) {
+        console.error('Error cargando configuracion de portada:', err);
+    }
+}
+
+async function guardarHomepageConfig(clave, valor) {
+    const token = obtenerToken();
+    const respuesta = await fetch(`/api/homepage/${clave}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ valor })
+    });
+    return respuesta.json();
+}
+
+function actualizarPreviewPortada(inputId, url) {
+    const preview = document.getElementById(`preview-${inputId}`);
+    if (!preview) return;
+
+    if (url) {
+        preview.innerHTML = `<img src="${url}" alt="Imagen de portada" class="homepage-preview-img">`;
+    } else {
+        preview.textContent = 'No hay imagen cargada';
+    }
+}
+
 function filtrarProductosAdmin() {
     const texto = document.getElementById('admin-buscador').value.toLowerCase().trim();
     const filtrados = productosAdminCache.filter(p => p.nombre.toLowerCase().includes(texto));
@@ -305,6 +349,7 @@ function cambiarTab(nombreTab) {
     });
     document.getElementById('tab-productos').classList.toggle('oculto', nombreTab !== 'productos');
     document.getElementById('tab-stats').classList.toggle('oculto', nombreTab !== 'stats');
+    document.getElementById('tab-homepage').classList.toggle('oculto', nombreTab !== 'homepage');
 
     if (nombreTab === 'stats') cargarStats();
 }
@@ -335,6 +380,41 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('admin-buscador').addEventListener('input', filtrarProductosAdmin);
     document.getElementById('cerrar-modal-form').addEventListener('click', cerrarModales);
     document.getElementById('overlay').addEventListener('click', cerrarModales);
+
+    document.getElementById('form-homepage').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const errorEl = document.getElementById('form-homepage-error');
+        const successEl = document.getElementById('form-homepage-success');
+        errorEl.classList.add('oculto');
+        successEl.classList.add('oculto');
+
+        const archivos = [
+            { inputId: 'homepage-img-rooms', clave: 'hero_rooms', urlField: 'homepage-img-rooms-url' },
+            { inputId: 'homepage-img-dining', clave: 'hero_dining', urlField: 'homepage-img-dining-url' },
+            { inputId: 'homepage-img-living', clave: 'hero_living', urlField: 'homepage-img-living-url' },
+            { inputId: 'homepage-img-all', clave: 'hero_all', urlField: 'homepage-img-all-url' }
+        ];
+
+        try {
+            for (const item of archivos) {
+                const archivo = document.getElementById(item.inputId).files[0];
+                let valor = document.getElementById(item.urlField).value;
+                if (archivo) {
+                    valor = await subirImagen(archivo);
+                }
+                if (valor) {
+                    await guardarHomepageConfig(item.clave, valor);
+                    document.getElementById(item.urlField).value = valor;
+                }
+            }
+            successEl.textContent = 'Configuración de portada guardada correctamente.';
+            successEl.classList.remove('oculto');
+        } catch (err) {
+            errorEl.textContent = err.message || 'Error guardando la portada.';
+            errorEl.classList.remove('oculto');
+            console.error(err);
+        }
+    });
 
     document.getElementById('form-producto').addEventListener('submit', async (e) => {
         e.preventDefault();
