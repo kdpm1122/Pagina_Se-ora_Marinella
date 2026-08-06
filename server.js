@@ -23,7 +23,8 @@ app.use(helmet({
             defaultSrc: ["'self'"],
             imgSrc: ["'self'", "data:", "https:"],
             scriptSrc: ["'self'"],
-            styleSrc: ["'self'", "'unsafe-inline'"],
+            styleSrc: ["'self'", "https://fonts.googleapis.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com"],
             connectSrc: ["'self'"]
         }
     }
@@ -31,8 +32,9 @@ app.use(helmet({
 app.use(cors());
 app.use(express.json());
 
-// Servir el frontend estatico (carpeta public)
-app.use(express.static('public'));
+// Servir el frontend estatico (carpeta public) con cache de 1 día
+const oneDay = 24 * 60 * 60 * 1000;
+app.use(express.static('public', { maxAge: oneDay }));
 
 // Rutas de la API
 app.use('/api/auth', authRoutes);

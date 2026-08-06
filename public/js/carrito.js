@@ -81,8 +81,11 @@ function pintarCarrito() {
     const contenedor = document.getElementById('items-carrito');
 
     if (carrito.length === 0) {
-        contenedor.innerHTML = '<p style="padding:1rem 0;">Tu carrito está vacío.</p>';
+        contenedor.innerHTML = '<p class="carrito-vacio">Tu carrito está vacío.</p>';
+        document.getElementById('subtotal-carrito').textContent = formatearPrecio(0);
         document.getElementById('total-carrito').textContent = formatearPrecio(0);
+        document.getElementById('btn-whatsapp').disabled = true;
+        document.getElementById('btn-vaciar-carrito').disabled = true;
         return;
     }
 
@@ -107,8 +110,22 @@ function pintarCarrito() {
     `;
     }).join('');
 
-    const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-    document.getElementById('total-carrito').textContent = formatearPrecio(total);
+    const subtotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+    document.getElementById('subtotal-carrito').textContent = formatearPrecio(subtotal);
+    document.getElementById('total-carrito').textContent = formatearPrecio(subtotal);
+    document.getElementById('btn-whatsapp').disabled = false;
+    document.getElementById('btn-vaciar-carrito').disabled = false;
+}
+
+function confirmarVaciarCarrito() {
+    const carrito = obtenerCarrito();
+    if (carrito.length === 0) return;
+    const confirmar = window.confirm('¿Seguro que quieres vaciar el carrito? Esta acción no se puede deshacer.');
+    if (confirmar) {
+        guardarCarrito([]);
+        pintarCarrito();
+        mostrarNotificacion('Carrito vaciado.');
+    }
 }
 
 // --- Generar el mensaje de WhatsApp y abrir el chat ---
@@ -177,6 +194,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('cerrar-carrito').addEventListener('click', cerrarModales);
     document.getElementById('btn-whatsapp').addEventListener('click', confirmarPedidoPorWhatsapp);
+    const btnVaciar = document.getElementById('btn-vaciar-carrito');
+    if (btnVaciar) {
+        btnVaciar.addEventListener('click', confirmarVaciarCarrito);
+    }
 
     // Delegacion de eventos para los botones +/- y eliminar dentro del carrito
     document.getElementById('items-carrito').addEventListener('click', (e) => {

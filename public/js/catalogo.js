@@ -59,11 +59,36 @@ function pintarProductos(productos) {
 function llenarFiltroCategorias(productos) {
     const select = document.getElementById('filtro-categoria');
     const categorias = [...new Set(productos.map(p => p.categoria).filter(Boolean))];
-
     categorias.forEach(cat => {
         const opcion = document.createElement('option');
         opcion.value = cat;
         opcion.textContent = cat;
+        select.appendChild(opcion);
+    });
+    llenarFiltroColor(productos);
+    llenarFiltroMaterial(productos);
+}
+
+function llenarFiltroColor(productos) {
+    const select = document.getElementById('filtro-color');
+    if (!select) return;
+    const colores = [...new Set(productos.map(p => p.color).filter(Boolean))];
+    colores.forEach(color => {
+        const opcion = document.createElement('option');
+        opcion.value = color;
+        opcion.textContent = color;
+        select.appendChild(opcion);
+    });
+}
+
+function llenarFiltroMaterial(productos) {
+    const select = document.getElementById('filtro-material');
+    if (!select) return;
+    const materiales = [...new Set(productos.map(p => p.material).filter(Boolean))];
+    materiales.forEach(material => {
+        const opcion = document.createElement('option');
+        opcion.value = material;
+        opcion.textContent = material;
         select.appendChild(opcion);
     });
 }
@@ -98,6 +123,8 @@ function actualizarTextoRangoPrecio() {
 function aplicarFiltros() {
     const texto = document.getElementById('buscador').value.toLowerCase().trim();
     const categoria = document.getElementById('filtro-categoria').value;
+    const color = document.getElementById('filtro-color') ? document.getElementById('filtro-color').value : '';
+    const material = document.getElementById('filtro-material') ? document.getElementById('filtro-material').value : '';
     const orden = document.getElementById('orden-productos').value;
 
     let precioMin = parseFloat(document.getElementById('precio-min').value);
@@ -107,14 +134,26 @@ function aplicarFiltros() {
     actualizarTextoRangoPrecio();
 
     let filtrados = productosCache.filter(p => {
-        const coincideTexto = p.nombre.toLowerCase().includes(texto) ||
-                               (p.descripcion || '').toLowerCase().includes(texto);
+        const nombre = (p.nombre || '').toLowerCase();
+        const descripcion = (p.descripcion || '').toLowerCase();
+        const categoriaTexto = (p.categoria || '').toLowerCase();
+        const colorTexto = (p.color || '').toLowerCase();
+        const materialTexto = (p.material || '').toLowerCase();
+        const coincideTexto = texto === '' || nombre.includes(texto) || descripcion.includes(texto) || categoriaTexto.includes(texto) || colorTexto.includes(texto) || materialTexto.includes(texto);
         const coincideCategoria = !categoria || p.categoria === categoria;
+        const coincideColor = !color || p.color === color;
+        const coincideMaterial = !material || p.material === material;
         const coincidePrecio = parseFloat(p.precio) >= precioMin && parseFloat(p.precio) <= precioMax;
-        return coincideTexto && coincideCategoria && coincidePrecio;
+        return coincideTexto && coincideCategoria && coincideColor && coincideMaterial && coincidePrecio;
     });
 
-    if (orden === 'precio-asc') {
+    if (orden === 'popularidad') {
+        filtrados = filtrados.slice().sort((a, b) => {
+            const popularA = a.etiqueta === 'mas_vendido' ? 1 : 0;
+            const popularB = b.etiqueta === 'mas_vendido' ? 1 : 0;
+            return popularB - popularA;
+        });
+    } else if (orden === 'precio-asc') {
         filtrados = filtrados.slice().sort((a, b) => a.precio - b.precio);
     } else if (orden === 'precio-desc') {
         filtrados = filtrados.slice().sort((a, b) => b.precio - a.precio);
@@ -137,8 +176,7 @@ async function abrirDetalleProducto(id) {
 
     detalle.innerHTML = `
         <div class="carrusel-detalle" data-indice="0">
-            <img id="carrusel-img" src="${fotos[0] || '/img/sin-imagen.png'}" alt="${producto.nombre}"
-                 style="width:100%; height:300px; object-fit:contain; border-radius:8px; background-color:#f0e4d3;">
+            <img id="carrusel-img" class="carrusel-img" src="${fotos[0] || '/img/sin-imagen.png'}" alt="${producto.nombre} - Foto del producto" loading="lazy">
             ${tieneVariasFotos ? `
                 <button class="carrusel-flecha carrusel-flecha-izq" id="carrusel-anterior">&#8249;</button>
                 <button class="carrusel-flecha carrusel-flecha-der" id="carrusel-siguiente">&#8250;</button>
@@ -147,14 +185,14 @@ async function abrirDetalleProducto(id) {
                 </div>
             ` : ''}
         </div>
-        <h2 style="margin-top:1rem;">${producto.nombre}</h2>
-        ${producto.categoria ? `<span class="categoria">${producto.categoria}</span>` : ''}
-        <p style="margin:1rem 0;">${producto.descripcion || 'Sin descripción disponible.'}</p>
+        <h2 class="detalle-titulo">${producto.nombre}</h2>
+        ${producto.categoria ? `<span class="categoria detalle-categoria">${producto.categoria}</span>` : ''}
+        <p class="detalle-descripcion">${producto.descripcion || 'Sin descripción disponible.'}</p>
         ${(producto.ancho_cm || producto.largo_cm || producto.alto_cm) ? `
-        <p style="color:#8b5e3c; font-size:0.9rem; margin-bottom:0.5rem;">
+        <p class="detalle-medidas">
             Medidas: ${producto.ancho_cm || '-'} cm (ancho) x ${producto.largo_cm || '-'} cm (largo) x ${producto.alto_cm || '-'} cm (alto)
         </p>` : ''}
-        <p class="precio" style="font-size:1.5rem;">${formatearPrecio(producto.precio)}</p>
+        <p class="precio detalle-precio">${formatearPrecio(producto.precio)}</p>
         <button class="btn-agregar" data-id="${producto.id}">Agregar al carrito</button>
         ${generarHtmlRelacionados(producto)}
     `;
@@ -258,14 +296,28 @@ async function cargarProductos() {
             document.title = `${categoriaInicial} - Muebles Marinella`;
             const metaDesc = document.querySelector('meta[property="og:description"]');
             if (metaDesc) metaDesc.setAttribute('content', `Explora nuestra colección de ${categoriaInicial.toLowerCase()}. Calidad y diseño para tu hogar.`);
+            const metaTitle = document.querySelector('meta[property="og:title"]');
+            if (metaTitle) metaTitle.setAttribute('content', `${categoriaInicial} - Muebles Marinella`);
             aplicarFiltros();
         } else {
             breadcrumbActual.textContent = ' / Todas las categorías';
             pintarProductos(productosCache);
         }
+
+        const spinner = document.getElementById('spinner-carga');
+        if (spinner) {
+            spinner.remove();
+        }
     } catch (err) {
-        document.getElementById('catalogo').innerHTML =
-            '<p id="mensaje-carga">No se pudieron cargar los muebles. Intenta recargar la página.</p>';
+        const catalogo = document.getElementById('catalogo');
+        if (catalogo) {
+            catalogo.innerHTML =
+                '<div class="mensaje-error"><h3>No se pudieron cargar los muebles</h3><p>Intenta recargar la página o vuelve más tarde.</p><button id="btn-reintentar" class="btn-reintentar">Reintentar</button></div>';
+            const botonReintentar = document.getElementById('btn-reintentar');
+            if (botonReintentar) {
+                botonReintentar.addEventListener('click', cargarProductos);
+            }
+        }
         console.error(err);
     }
 }
@@ -276,6 +328,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('buscador').addEventListener('input', aplicarFiltros);
     document.getElementById('filtro-categoria').addEventListener('change', aplicarFiltros);
+    const filtroColor = document.getElementById('filtro-color');
+    if (filtroColor) filtroColor.addEventListener('change', aplicarFiltros);
+    const filtroMaterial = document.getElementById('filtro-material');
+    if (filtroMaterial) filtroMaterial.addEventListener('change', aplicarFiltros);
     document.getElementById('orden-productos').addEventListener('change', aplicarFiltros);
     document.getElementById('precio-min').addEventListener('input', aplicarFiltros);
     document.getElementById('precio-max').addEventListener('input', aplicarFiltros);

@@ -123,18 +123,17 @@ async function iniciarSesion(email, password) {
 }
 
 // --- Cargar y pintar la lista de productos en la tabla ---
-async function cargarProductosAdmin() {
+let productosAdminCache = [];
+
+function pintarTablaProductos(productos) {
     const contenedor = document.getElementById('tabla-productos');
-    try {
-        const respuesta = await fetch('/api/productos');
-        const productos = await respuesta.json();
 
-        if (productos.length === 0) {
-            contenedor.innerHTML = '<p style="padding:1.5rem;">No hay productos todavía. Crea el primero.</p>';
-            return;
-        }
+    if (productos.length === 0) {
+        contenedor.innerHTML = '<p style="padding:1.5rem;">No se encontraron productos.</p>';
+        return;
+    }
 
-        contenedor.innerHTML = productos.map(p => `
+    contenedor.innerHTML = productos.map(p => `
             <div class="fila-producto">
                 <img src="${p.imagen_url || '/img/sin-imagen.png'}" alt="${p.nombre}">
                 <div>
@@ -149,10 +148,24 @@ async function cargarProductosAdmin() {
                 </div>
             </div>
         `).join('');
+}
+
+async function cargarProductosAdmin() {
+    const contenedor = document.getElementById('tabla-productos');
+    try {
+        const respuesta = await fetch('/api/productos');
+        productosAdminCache = await respuesta.json();
+        pintarTablaProductos(productosAdminCache);
     } catch (err) {
         contenedor.innerHTML = '<p style="padding:1.5rem;">Error cargando productos.</p>';
         console.error(err);
     }
+}
+
+function filtrarProductosAdmin() {
+    const texto = document.getElementById('admin-buscador').value.toLowerCase().trim();
+    const filtrados = productosAdminCache.filter(p => p.nombre.toLowerCase().includes(texto));
+    pintarTablaProductos(filtrados);
 }
 
 // --- Abrir el modal de formulario, vacio (nuevo) o lleno (editar) ---
@@ -294,6 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-nuevo-producto').addEventListener('click', () => abrirFormularioProducto());
+    document.getElementById('admin-buscador').addEventListener('input', filtrarProductosAdmin);
     document.getElementById('cerrar-modal-form').addEventListener('click', cerrarModales);
     document.getElementById('overlay').addEventListener('click', cerrarModales);
 
@@ -364,6 +378,20 @@ document.addEventListener('DOMContentLoaded', () => {
             preview.classList.remove('oculto');
         };
         lector.readAsDataURL(archivo);
+    });
+
+    // Boton para quitar la foto principal
+    document.getElementById('btn-quitar-imagen').addEventListener('click', () => {
+        document.getElementById('producto-imagen').value = '';
+        document.getElementById('producto-imagen-archivo').value = '';
+        document.getElementById('preview-imagen').classList.add('oculto');
+    });
+
+    // Boton para quitar la segunda foto
+    document.getElementById('btn-quitar-imagen-2').addEventListener('click', () => {
+        document.getElementById('producto-imagen-2').value = '';
+        document.getElementById('producto-imagen-archivo-2').value = '';
+        document.getElementById('preview-imagen-2').classList.add('oculto');
     });
 
     // Vista previa inmediata para la segunda foto (opcional)

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon server.js",
+    "build": "esbuild public/js/catalogo.js --minify --outfile=public/dist/catalogo.min.js && esbuild public/js/carrito.js --minify --outfile=public/dist/carrito.min.js && esbuild public/js/color-fondo.js --minify --outfile=public/dist/color-fondo.min.js && esbuild public/css/styles.css --minify --outfile=public/dist/styles.min.css && esbuild public/css/inicio.css --minify --outfile=public/dist/inicio.min.css",
     "start": "node server.js"
   },
   "keywords": [
@@ -28,6 +29,7 @@
     "pg": "^8.22.0"
   },
   "devDependencies": {
+    "esbuild": "^0.28.1",
     "nodemon": "^3.1.14"
   }
 }

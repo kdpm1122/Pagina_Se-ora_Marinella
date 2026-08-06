@@ -331,3 +331,13 @@
 .fila-medidas label {
     font-size: 0.85rem;
 }
+
+/* ---------- Buscador dentro del panel de admin ---------- */
+.admin-buscador {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--color-madera-clara);
+    border-radius: var(--radio);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}

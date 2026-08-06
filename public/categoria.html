@@ -5,40 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Muebles Marinella - Catálogo</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-        <meta property="og:title" content="Muebles Marinella - Catálogo de Muebles">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta property="og:title" content="Muebles Marinella - Catálogo de Muebles">
     <meta property="og:description" content="Encuentra el mueble perfecto para cada espacio. Dormitorios, comedores, salas y más.">
     <meta property="og:image" content="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800">
     <meta property="og:type" content="website">
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/dist/styles.min.css">
 </head>
 <body>
 
     <header class="header">
         <div class="header-content">
-            <a href="/" style="text-decoration:none; color:inherit;"><h1 class="logo">Muebles Marinella</h1></a>
-            <button id="btn-carrito" class="btn-carrito">
-                🛒 Carrito <span id="contador-carrito" class="contador">0</span>
-            </button>
+            <a href="/" class="logo-link" aria-label="Inicio"><h1 class="logo">Muebles Marinella</h1></a>
+            <nav class="main-nav" aria-label="Navegación principal">
+                <a href="/" class="nav-link">Inicio</a>
+                <a href="#contacto" class="nav-link">Contacto</a>
+                <button id="btn-carrito" class="btn-carrito btn-carrito-header" aria-label="Abrir carrito">
+                    🛒 Carrito <span id="contador-carrito" class="contador">0</span>
+                </button>
+            </nav>
         </div>
     </header>
 
-    <nav class="breadcrumb">
+    <nav class="breadcrumb" aria-label="Ruta de navegación">
         <a href="/">Inicio</a>
         <span id="breadcrumb-actual"></span>
     </nav>
 
-    <section class="filtros">
-        <input type="text" id="buscador" placeholder="Buscar mueble...">
-        <select id="filtro-categoria">
-            <option value="">Todas las categorías</option>
-        </select>
-        <select id="orden-productos">
-            <option value="">Ordenar por</option>
-            <option value="precio-asc">Precio: menor a mayor</option>
-            <option value="precio-desc">Precio: mayor a menor</option>
-            <option value="nombre-asc">Nombre: A-Z</option>
-        </select>
-    </section>
+    <main>
+        <section class="filtros" aria-label="Filtros de producto">
+            <label class="sr-only" for="buscador">Buscar muebles</label>
+            <input type="search" id="buscador" placeholder="Buscar mueble..." aria-label="Buscar muebles">
+
+            <label class="sr-only" for="filtro-categoria">Filtrar por categoría</label>
+            <select id="filtro-categoria" aria-label="Filtrar por categoría">
+                <option value="">Todas las categorías</option>
+            </select>
+
+            <label class="sr-only" for="filtro-color">Filtrar por color</label>
+            <select id="filtro-color" aria-label="Filtrar por color">
+                <option value="">Todos los colores</option>
+            </select>
+
+            <label class="sr-only" for="filtro-material">Filtrar por material</label>
+            <select id="filtro-material" aria-label="Filtrar por material">
+                <option value="">Todos los materiales</option>
+            </select>
+
+            <label class="sr-only" for="orden-productos">Ordenar productos</label>
+            <select id="orden-productos" aria-label="Ordenar productos">
+                <option value="">Ordenar por</option>
+                <option value="popularidad">Popularidad</option>
+                <option value="precio-asc">Precio: menor a mayor</option>
+                <option value="precio-desc">Precio: mayor a menor</option>
+                <option value="nombre-asc">Nombre: A-Z</option>
+            </select>
+        </section>
 
     <div class="filtro-precio">
         <label>Rango de precio: <span id="rango-precio-texto"></span></label>
@@ -50,12 +74,13 @@
 
     <p id="contador-resultados" class="contador-resultados"></p>
 
-    <main class="catalogo" id="catalogo">
+    <section class="catalogo" id="catalogo">
         <!-- Los productos se cargan aqui dinamicamente con JS -->
         <div id="spinner-carga" class="spinner-carga">
             <div class="spinner-circulo"></div>
             <p>Cargando muebles...</p>
         </div>
+    </section>
     </main>
 
     <!-- Modal de detalle de producto -->
@@ -74,10 +99,14 @@
         </div>
         <div id="items-carrito" class="items-carrito"></div>
         <div class="panel-carrito-footer">
+            <p class="subtotal-carrito">Subtotal: <span id="subtotal-carrito">$0</span></p>
             <p class="total-carrito">Total: <span id="total-carrito">$0</span></p>
-            <button id="btn-whatsapp" class="btn-whatsapp">
-                Cotización completa por WhatsApp
-            </button>
+            <div class="carrito-footer-actions">
+                <button id="btn-vaciar-carrito" class="btn-vaciar" type="button">Vaciar carrito</button>
+                <button id="btn-whatsapp" class="btn-whatsapp" type="button">
+                    Cotización completa por WhatsApp
+                </button>
+            </div>
         </div>
     </div>
 
@@ -98,7 +127,7 @@
         </div>
     </footer>
 
-    <div id="overlay" class="overlay oculto"></div>
+    <div id="overlay" class="overlay oculto" tabindex="-1"></div>
 
     <!-- Boton flotante de WhatsApp, siempre visible para consultas rapidas -->
     <a id="whatsapp-flotante" class="whatsapp-flotante" target="_blank" rel="noopener" title="Escríbenos por WhatsApp">
@@ -108,8 +137,8 @@
         </svg>
     </a>
 
-    <script src="/js/color-fondo.js"></script>
-    <script src="/js/carrito.js"></script>
-    <script src="/js/catalogo.js"></script>
+    <script src="/dist/color-fondo.min.js"></script>
+    <script src="/dist/carrito.min.js"></script>
+    <script src="/dist/catalogo.min.js"></script>
 </body>
 </html>
