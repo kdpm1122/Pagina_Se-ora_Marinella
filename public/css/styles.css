@@ -982,3 +982,15 @@ body {
 .badge-mas_vendido {
     background-color: #d68c1f;
 }
+
+/* ---------- Link discreto de acceso al admin (en el footer) ---------- */
+.link-admin-discreto {
+    color: inherit;
+    text-decoration: none;
+    padding: 0 0.4rem;
+    opacity: 0.5;
+}
+
+.link-admin-discreto:hover {
+    opacity: 1;
+}
