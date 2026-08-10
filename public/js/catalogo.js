@@ -72,7 +72,11 @@ function llenarFiltroCategorias(productos) {
 function llenarFiltroColor(productos) {
     const select = document.getElementById('filtro-color');
     if (!select) return;
-    const colores = [...new Set(productos.map(p => p.color).filter(Boolean))];
+    // Separamos por coma porque un mueble puede tener varios colores disponibles
+    const todosLosColores = productos
+        .flatMap(p => (p.color || '').split(',').map(c => c.trim()))
+        .filter(Boolean);
+    const colores = [...new Set(todosLosColores)];
     colores.forEach(color => {
         const opcion = document.createElement('option');
         opcion.value = color;
@@ -84,7 +88,10 @@ function llenarFiltroColor(productos) {
 function llenarFiltroMaterial(productos) {
     const select = document.getElementById('filtro-material');
     if (!select) return;
-    const materiales = [...new Set(productos.map(p => p.material).filter(Boolean))];
+    const todosLosMateriales = productos
+        .flatMap(p => (p.material || '').split(',').map(m => m.trim()))
+        .filter(Boolean);
+    const materiales = [...new Set(todosLosMateriales)];
     materiales.forEach(material => {
         const opcion = document.createElement('option');
         opcion.value = material;
@@ -141,8 +148,9 @@ function aplicarFiltros() {
         const materialTexto = (p.material || '').toLowerCase();
         const coincideTexto = texto === '' || nombre.includes(texto) || descripcion.includes(texto) || categoriaTexto.includes(texto) || colorTexto.includes(texto) || materialTexto.includes(texto);
         const coincideCategoria = !categoria || p.categoria === categoria;
-        const coincideColor = !color || p.color === color;
-        const coincideMaterial = !material || p.material === material;
+        // Usamos includes() porque un producto puede tener varios colores/materiales separados por coma
+        const coincideColor = !color || (p.color || '').split(',').map(c => c.trim()).includes(color);
+        const coincideMaterial = !material || (p.material || '').split(',').map(m => m.trim()).includes(material);
         const coincidePrecio = parseFloat(p.precio) >= precioMin && parseFloat(p.precio) <= precioMax;
         return coincideTexto && coincideCategoria && coincideColor && coincideMaterial && coincidePrecio;
     });
@@ -187,12 +195,39 @@ async function abrirDetalleProducto(id) {
         </div>
         <h2 class="detalle-titulo">${producto.nombre}</h2>
         ${producto.categoria ? `<span class="categoria detalle-categoria">${producto.categoria}</span>` : ''}
-        <p class="detalle-descripcion">${producto.descripcion || 'Sin descripción disponible.'}</p>
+
+        <div class="detalle-seccion">
+            <h4 class="detalle-seccion-titulo">Descripción</h4>
+            <p class="detalle-descripcion">${producto.descripcion || 'Sin descripción disponible.'}</p>
+        </div>
+
         ${(producto.ancho_cm || producto.largo_cm || producto.alto_cm) ? `
-        <p class="detalle-medidas">
-            Medidas: ${producto.ancho_cm || '-'} cm (ancho) x ${producto.largo_cm || '-'} cm (largo) x ${producto.alto_cm || '-'} cm (alto)
-        </p>` : ''}
-        <p class="precio detalle-precio">${formatearPrecio(producto.precio)}</p>
+        <div class="detalle-seccion">
+            <h4 class="detalle-seccion-titulo">Medidas</h4>
+            <p class="detalle-medidas">${producto.ancho_cm || '-'} cm (ancho) x ${producto.largo_cm || '-'} cm (largo) x ${producto.alto_cm || '-'} cm (alto)</p>
+        </div>` : ''}
+
+        ${producto.color ? `
+        <div class="detalle-seccion">
+            <h4 class="detalle-seccion-titulo">Colores</h4>
+            <div class="detalle-chips">
+                ${producto.color.split(',').map(c => `<span class="detalle-chip">${c.trim()}</span>`).join('')}
+            </div>
+        </div>` : ''}
+
+        ${producto.material ? `
+        <div class="detalle-seccion">
+            <h4 class="detalle-seccion-titulo">Materiales</h4>
+            <div class="detalle-chips">
+                ${producto.material.split(',').map(m => `<span class="detalle-chip">${m.trim()}</span>`).join('')}
+            </div>
+        </div>` : ''}
+
+        <div class="detalle-seccion">
+            <h4 class="detalle-seccion-titulo">Precio</h4>
+            <p class="precio detalle-precio">${formatearPrecio(producto.precio)}</p>
+        </div>
+
         <button class="btn-agregar" data-id="${producto.id}">Agregar al carrito</button>
         ${generarHtmlRelacionados(producto)}
     `;

@@ -1000,3 +1000,32 @@ body {
 .link-admin-esquina:hover {
     opacity: 0.6;
 }
+
+/* ---------- Secciones tituladas en el detalle del producto ---------- */
+.detalle-seccion {
+    margin: 1rem 0;
+}
+
+.detalle-seccion-titulo {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-madera);
+    margin-bottom: 0.4rem;
+}
+
+.detalle-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.detalle-chip {
+    background-color: var(--color-beige);
+    color: var(--color-madera-oscura);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+}
