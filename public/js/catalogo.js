@@ -20,6 +20,8 @@ function formatearPrecio(valor) {
 function pintarProductos(productos) {
     const contenedor = document.getElementById('catalogo');
     const contadorEl = document.getElementById('contador-resultados');
+    if (!contenedor) return;
+
     if (contadorEl) {
         contadorEl.textContent = `Mostrando ${productos.length} de ${productosCache.length} productos`;
     }
@@ -47,7 +49,7 @@ function pintarProductos(productos) {
     `).join('');
 
     // Aplicamos el color de fondo dinamico a cada imagen recien pintada
-    document.querySelectorAll('img[data-imagen-color]').forEach(img => {
+    contenedor.querySelectorAll('img[data-imagen-color]').forEach(img => {
         img.style.backgroundColor = '#f0e4d3';
         obtenerColorDominante(img).then(color => {
             img.style.backgroundColor = color;
@@ -58,6 +60,14 @@ function pintarProductos(productos) {
 // --- Llenar el select de categorias con las categorias unicas que existan ---
 function llenarFiltroCategorias(productos) {
     const select = document.getElementById('filtro-categoria');
+    if (!select) return;
+
+    select.length = 0;
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Todas las categorías';
+    select.appendChild(placeholder);
+
     const categorias = [...new Set(productos.map(p => p.categoria).filter(Boolean))];
     categorias.forEach(cat => {
         const opcion = document.createElement('option');
@@ -72,6 +82,13 @@ function llenarFiltroCategorias(productos) {
 function llenarFiltroColor(productos) {
     const select = document.getElementById('filtro-color');
     if (!select) return;
+
+    select.length = 0;
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Todos los colores';
+    select.appendChild(placeholder);
+
     // Separamos por coma porque un mueble puede tener varios colores disponibles
     const todosLosColores = productos
         .flatMap(p => (p.color || '').split(',').map(c => c.trim()))
@@ -88,6 +105,13 @@ function llenarFiltroColor(productos) {
 function llenarFiltroMaterial(productos) {
     const select = document.getElementById('filtro-material');
     if (!select) return;
+
+    select.length = 0;
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Todos los materiales';
+    select.appendChild(placeholder);
+
     const todosLosMateriales = productos
         .flatMap(p => (p.material || '').split(',').map(m => m.trim()))
         .filter(Boolean);
@@ -102,13 +126,17 @@ function llenarFiltroMaterial(productos) {
 
 // --- Aplicar filtros de busqueda + categoria sobre el cache local ---
 function configurarSliderPrecio(productos) {
-    if (productos.length === 0) return;
-    const precios = productos.map(p => parseFloat(p.precio));
+    const precios = productos
+        .map(p => Number(p.precio))
+        .filter(Number.isFinite);
+    if (precios.length === 0) return;
+
     const min = Math.floor(Math.min(...precios) / 50000) * 50000;
     const max = Math.ceil(Math.max(...precios) / 50000) * 50000;
 
     const sliderMin = document.getElementById('precio-min');
     const sliderMax = document.getElementById('precio-max');
+    if (!sliderMin || !sliderMax) return;
 
     [sliderMin, sliderMax].forEach(s => {
         s.min = min;
@@ -122,20 +150,36 @@ function configurarSliderPrecio(productos) {
 }
 
 function actualizarTextoRangoPrecio() {
-    const min = parseFloat(document.getElementById('precio-min').value);
-    const max = parseFloat(document.getElementById('precio-max').value);
-    document.getElementById('rango-precio-texto').textContent = `${formatearPrecio(min)} - ${formatearPrecio(max)}`;
+    const sliderMin = document.getElementById('precio-min');
+    const sliderMax = document.getElementById('precio-max');
+    const textoRango = document.getElementById('rango-precio-texto');
+
+    if (!sliderMin || !sliderMax || !textoRango) return;
+
+    const min = parseFloat(sliderMin.value) || 0;
+    const max = parseFloat(sliderMax.value) || 0;
+    textoRango.textContent = `${formatearPrecio(min)} - ${formatearPrecio(max)}`;
 }
 
 function aplicarFiltros() {
-    const texto = document.getElementById('buscador').value.toLowerCase().trim();
-    const categoria = document.getElementById('filtro-categoria').value;
-    const color = document.getElementById('filtro-color') ? document.getElementById('filtro-color').value : '';
-    const material = document.getElementById('filtro-material') ? document.getElementById('filtro-material').value : '';
-    const orden = document.getElementById('orden-productos').value;
+    const buscadorEl = document.getElementById('buscador');
+    const filtroCategoriaEl = document.getElementById('filtro-categoria');
+    const filtroColorEl = document.getElementById('filtro-color');
+    const filtroMaterialEl = document.getElementById('filtro-material');
+    const ordenEl = document.getElementById('orden-productos');
+    const sliderMin = document.getElementById('precio-min');
+    const sliderMax = document.getElementById('precio-max');
 
-    let precioMin = parseFloat(document.getElementById('precio-min').value);
-    let precioMax = parseFloat(document.getElementById('precio-max').value);
+    const texto = buscadorEl ? buscadorEl.value.toLowerCase().trim() : '';
+    const categoria = filtroCategoriaEl ? filtroCategoriaEl.value : '';
+    const color = filtroColorEl ? filtroColorEl.value : '';
+    const material = filtroMaterialEl ? filtroMaterialEl.value : '';
+    const orden = ordenEl ? ordenEl.value : '';
+
+    let precioMin = sliderMin ? parseFloat(sliderMin.value) : 0;
+    let precioMax = sliderMax ? parseFloat(sliderMax.value) : 0;
+    if (!Number.isFinite(precioMin)) precioMin = 0;
+    if (!Number.isFinite(precioMax)) precioMax = 0;
     if (precioMin > precioMax) [precioMin, precioMax] = [precioMax, precioMin];
 
     actualizarTextoRangoPrecio();
@@ -178,6 +222,7 @@ async function abrirDetalleProducto(id) {
     if (!producto) return;
 
     const detalle = document.getElementById('detalle-producto');
+    if (!detalle) return;
 
     const fotos = [producto.imagen_url, producto.imagen_url_2].filter(Boolean);
     const tieneVariasFotos = fotos.length > 1;
@@ -232,8 +277,10 @@ async function abrirDetalleProducto(id) {
         ${generarHtmlRelacionados(producto)}
     `;
 
-    document.getElementById('modal-producto').classList.remove('oculto');
-    document.getElementById('overlay').classList.remove('oculto');
+    const modalProducto = document.getElementById('modal-producto');
+    const overlay = document.getElementById('overlay');
+    if (modalProducto) modalProducto.classList.remove('oculto');
+    if (overlay) overlay.classList.remove('oculto');
 
     // Calculamos el color de fondo que combine con la foto actual
     const imgCarrusel = document.getElementById('carrusel-img');
@@ -371,32 +418,45 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('precio-min').addEventListener('input', aplicarFiltros);
     document.getElementById('precio-max').addEventListener('input', aplicarFiltros);
 
-    document.getElementById('overlay').addEventListener('click', cerrarModales);
-    document.getElementById('cerrar-modal-producto').addEventListener('click', cerrarModales);
+    const overlay = document.getElementById('overlay');
+    const cerrarModalBtn = document.getElementById('cerrar-modal-producto');
+    const catalogoEl = document.getElementById('catalogo');
+    const detalleProductoEl = document.getElementById('detalle-producto');
+
+    if (overlay) {
+        overlay.addEventListener('click', cerrarModales);
+    }
+    if (cerrarModalBtn) {
+        cerrarModalBtn.addEventListener('click', cerrarModales);
+    }
 
     // Delegacion de eventos: escuchamos clicks en todo el catalogo
     // para no tener que re-asignar eventos cada vez que se repinta
-    document.getElementById('catalogo').addEventListener('click', (e) => {
-        const tarjeta = e.target.closest('.tarjeta-producto');
-        const btnAgregar = e.target.closest('.btn-agregar');
+    if (catalogoEl) {
+        catalogoEl.addEventListener('click', (e) => {
+            const tarjeta = e.target.closest('.tarjeta-producto');
+            const btnAgregar = e.target.closest('.btn-agregar');
 
-        if (btnAgregar) {
-            e.stopPropagation();
-            agregarAlCarrito(btnAgregar.dataset.id);
-        } else if (tarjeta) {
-            abrirDetalleProducto(tarjeta.dataset.id);
-        }
-    });
+            if (btnAgregar) {
+                e.stopPropagation();
+                agregarAlCarrito(btnAgregar.dataset.id);
+            } else if (tarjeta) {
+                abrirDetalleProducto(tarjeta.dataset.id);
+            }
+        });
+    }
 
     // El boton "agregar" dentro del modal de detalle, y los productos relacionados
-    document.getElementById('detalle-producto').addEventListener('click', (e) => {
-        const btnAgregar = e.target.closest('.btn-agregar');
-        const relacionado = e.target.closest('.relacionado-item');
+    if (detalleProductoEl) {
+        detalleProductoEl.addEventListener('click', (e) => {
+            const btnAgregar = e.target.closest('.btn-agregar');
+            const relacionado = e.target.closest('.relacionado-item');
 
-        if (btnAgregar) {
-            agregarAlCarrito(btnAgregar.dataset.id);
-        } else if (relacionado) {
-            abrirDetalleProducto(relacionado.dataset.id);
-        }
-    });
+            if (btnAgregar) {
+                agregarAlCarrito(btnAgregar.dataset.id);
+            } else if (relacionado) {
+                abrirDetalleProducto(relacionado.dataset.id);
+            }
+        });
+    }
 });
