@@ -92,8 +92,35 @@
         <!-- Tab: portada -->
         <section id="tab-homepage" class="admin-tab oculto">
             <h2>Configuración de portada</h2>
-            <p>Actualiza los enlaces de las tarjetas de la página de inicio.</p>
+            <p>Actualiza el texto, los botones y las imágenes de la página principal.</p>
             <form id="form-homepage">
+                <label>Insignia principal</label>
+                <input type="text" id="homepage-badge" placeholder="Muebles con estilo y valor">
+
+                <label>Título principal</label>
+                <input type="text" id="homepage-title" placeholder="Diseño pensado para cada rincón de tu hogar">
+
+                <label>Texto principal</label>
+                <textarea id="homepage-text" rows="3" placeholder="Describe la oferta principal..."></textarea>
+
+                <label>Texto botón principal</label>
+                <input type="text" id="homepage-cta-main" placeholder="Ver catálogo completo">
+
+                <label>Texto botón WhatsApp</label>
+                <input type="text" id="homepage-cta-whatsapp" placeholder="Contactar por WhatsApp">
+
+                <label>Nombre categoría Dormitorios</label>
+                <input type="text" id="homepage-cat-dormitorios" placeholder="Dormitorios">
+
+                <label>Nombre categoría Comedores</label>
+                <input type="text" id="homepage-cat-comedores" placeholder="Comedores">
+
+                <label>Nombre categoría Salas</label>
+                <input type="text" id="homepage-cat-salas" placeholder="Salas">
+
+                <label>Nombre categoría Todas</label>
+                <input type="text" id="homepage-cat-todas" placeholder="Todas las categorías">
+
                 <label>Imagen Dormitorios</label>
                 <input type="file" id="homepage-img-rooms" accept="image/jpeg,image/png,image/webp">
                 <input type="hidden" id="homepage-img-rooms-url">

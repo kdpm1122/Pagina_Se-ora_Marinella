@@ -187,6 +187,24 @@ async function cargarHomepageConfig() {
         const respuesta = await fetch('/api/homepage');
         const config = await respuesta.json();
 
+        const textoConfig = [
+            { inputId: 'homepage-badge', clave: 'hero_badge', defaultValue: 'Muebles con estilo y valor' },
+            { inputId: 'homepage-title', clave: 'hero_title', defaultValue: 'Diseño pensado para cada rincón de tu hogar' },
+            { inputId: 'homepage-text', clave: 'hero_text', defaultValue: 'Descubre piezas elegantes en dormitorios, salas y comedores con atención personalizada, calidad que dura y entregas rápidas.' },
+            { inputId: 'homepage-cta-main', clave: 'hero_cta_main', defaultValue: 'Ver catálogo completo' },
+            { inputId: 'homepage-cta-whatsapp', clave: 'hero_cta_secondary', defaultValue: 'Contactar por WhatsApp' },
+            { inputId: 'homepage-cat-dormitorios', clave: 'cat_dormitorios', defaultValue: 'Dormitorios' },
+            { inputId: 'homepage-cat-comedores', clave: 'cat_comedores', defaultValue: 'Comedores' },
+            { inputId: 'homepage-cat-salas', clave: 'cat_salas', defaultValue: 'Salas' },
+            { inputId: 'homepage-cat-todas', clave: 'cat_todas', defaultValue: 'Todas las categorías' }
+        ];
+
+        textoConfig.forEach(({ inputId, clave, defaultValue }) => {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            input.value = config[clave] || defaultValue;
+        });
+
         document.getElementById('homepage-img-rooms-url').value = config.hero_rooms || '';
         document.getElementById('homepage-img-dining-url').value = config.hero_dining || '';
         document.getElementById('homepage-img-living-url').value = config.hero_living || '';
@@ -390,6 +408,18 @@ document.addEventListener('DOMContentLoaded', () => {
         errorEl.classList.add('oculto');
         successEl.classList.add('oculto');
 
+        const textos = [
+            { inputId: 'homepage-badge', clave: 'hero_badge' },
+            { inputId: 'homepage-title', clave: 'hero_title' },
+            { inputId: 'homepage-text', clave: 'hero_text' },
+            { inputId: 'homepage-cta-main', clave: 'hero_cta_main' },
+            { inputId: 'homepage-cta-whatsapp', clave: 'hero_cta_secondary' },
+            { inputId: 'homepage-cat-dormitorios', clave: 'cat_dormitorios' },
+            { inputId: 'homepage-cat-comedores', clave: 'cat_comedores' },
+            { inputId: 'homepage-cat-salas', clave: 'cat_salas' },
+            { inputId: 'homepage-cat-todas', clave: 'cat_todas' }
+        ];
+
         const archivos = [
             { inputId: 'homepage-img-rooms', clave: 'hero_rooms', urlField: 'homepage-img-rooms-url' },
             { inputId: 'homepage-img-dining', clave: 'hero_dining', urlField: 'homepage-img-dining-url' },
@@ -398,6 +428,13 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
 
         try {
+            for (const item of textos) {
+                const valor = document.getElementById(item.inputId).value.trim();
+                if (valor) {
+                    await guardarHomepageConfig(item.clave, valor);
+                }
+            }
+
             for (const item of archivos) {
                 const archivo = document.getElementById(item.inputId).files[0];
                 let valor = document.getElementById(item.urlField).value;
